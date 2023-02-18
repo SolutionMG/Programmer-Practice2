@@ -353,6 +353,10 @@ bool BaseServer::CommandWorkBranch( const SOCKET& socket, const std::string& com
 
     if (command.empty() )
     {
+        player.StartLock();
+        player.ClearChattingBuffer();
+        player.EndLock();
+
         player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
         player.ReceivePacket();
         return false;

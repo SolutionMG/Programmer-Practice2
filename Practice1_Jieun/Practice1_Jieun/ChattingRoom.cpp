@@ -19,9 +19,11 @@ void ChattingRoom::PushAccessor( const SOCKET& socket )
 
 void ChattingRoom::PopAccessor( const SOCKET& socket )
 {
-	auto iter = find( m_accessorIndex.begin(), m_accessorIndex.end(), socket );
-	if (iter != m_accessorIndex.end())
-		m_accessorIndex.erase( iter );
+	std::erase_if( m_accessorIndex,
+	[ & ]( const SOCKET& socket2 )
+	{
+		return socket == socket2;
+	} );
 }
 
 const std::vector< SOCKET >& ChattingRoom::GetAccessorIndex() const
