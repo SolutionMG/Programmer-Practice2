@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00.MainProcess">
+      <UniqueIdentifier>{8cabc994-879e-488d-888b-f50b07421a4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.BaseServer">
+      <UniqueIdentifier>{d5565a3b-4df2-4f09-ae05-f594570f715e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99.Header">
+      <UniqueIdentifier>{cf2a0497-d731-4435-834e-f518644b48b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Room">
+      <UniqueIdentifier>{0b9fc2d0-94d3-4df2-a666-a639ab27e854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Room\00.ChattingRoom">
+      <UniqueIdentifier>{b35ea6a9-5f8a-491e-a580-0e3e38171059}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Client">
+      <UniqueIdentifier>{6cc128d7-2697-4cf3-aa4d-3070243eca28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Client\00.PlayerInfo">
+      <UniqueIdentifier>{fd48a4ef-8c2c-47ee-801a-496b1f646843}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>99.Header</Filter>
+    </ClCompile>
+    <ClCompile Include="MainProcess.cpp">
+      <Filter>00.MainProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseServer.cpp">
+      <Filter>01.BaseServer</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>03.Room</Filter>
+    </ClCompile>
+    <ClCompile Include="ChattingRoom.cpp">
+      <Filter>03.Room\00.ChattingRoom</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerInfo.cpp">
+      <Filter>02.Client\00.PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientInfo.cpp">
+      <Filter>02.Client</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>99.Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseServer.h">
+      <Filter>01.BaseServer</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>03.Room</Filter>
+    </ClInclude>
+    <ClInclude Include="ChattingRoom.h">
+      <Filter>03.Room\00.ChattingRoom</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInfo.h">
+      <Filter>02.Client\00.PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInfo.h">
+      <Filter>02.Client</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>99.Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
