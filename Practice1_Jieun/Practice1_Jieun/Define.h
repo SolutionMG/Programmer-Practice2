@@ -3,27 +3,6 @@
 #ifndef DEFINE_H
 #define DEFINE_H
 
-namespace InitailizeServer
-{
-	constexpr unsigned short TOTALCORE = 8;
-	constexpr unsigned short SERVERPORT = 9000;
-	constexpr unsigned short MAX_BUFFERSIZE = 1024;
-};
-
-
-namespace InitailizePlayer
-{
-	constexpr unsigned short MAX_NAME = 32;
-}
-
-
-namespace InitializeRoom
-{
-	constexpr unsigned short MAX_ROOMPLAYER = 20;
-	constexpr unsigned short MIN_ROOMPLAYER = 2;
-	constexpr unsigned short MAX_ROOMNAME = 32;
-}
-
 
 namespace RenderMessageMacro
 {

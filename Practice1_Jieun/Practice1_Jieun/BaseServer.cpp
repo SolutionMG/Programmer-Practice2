@@ -4,6 +4,7 @@
 #include "BaseServer.h"
 #include "ChattingRoom.h"
 #include "PlayerInfo.h"
+
 #include <algorithm>
 #include <chrono>
 #include <thread>
@@ -69,7 +70,7 @@ bool BaseServer::OpenServer()
 
     ///WorkerThread 생성 - Accept, Send, Recv 기능 수행 IOCP 쓰레드 풀을 통해 TOTALCORE/2 개수의 스레드로 동작
     std::vector< std::thread > workerThreads;
-    for (int i = 0; i < ( InitailizeServer::TOTALCORE / 2 ); ++i)
+    for (int i = 0; i < ( InitializeServer::TOTALCORE / 2 ); ++i)
     {
         workerThreads.emplace_back( [ & ]() { MainWorkProcess(); } );
     }
@@ -179,7 +180,7 @@ bool BaseServer::Listen()
     SOCKADDR_IN serverAddr;
     ZeroMemory( &serverAddr, sizeof( serverAddr ) );
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons( InitailizeServer::SERVERPORT );
+    serverAddr.sin_port = htons( InitializeServer::SERVERPORT );
     serverAddr.sin_addr.S_un.S_addr = htonl( INADDR_ANY );
 
     int returnValue = -1;
@@ -1176,46 +1177,50 @@ bool BaseServer::Chatting( const SOCKET& socket )
 
 bool BaseServer::ReassemblePacket( char* packet, const DWORD& bytes, const SOCKET& socket )
 {
-    if (packet == nullptr || bytes == 0)
+    if ( packet == nullptr || bytes == 0 )
         return false;
 
-    m_playersLock.lock();
-    auto& player = m_players[socket];
-    m_playersLock.unlock();
+    m_playersLock.lock( );
+    auto& player = m_players[ socket ];
+    m_playersLock.unlock( );
 
-    bool flag = false;
-    for (DWORD i = 0; i < bytes; ++i)
-    {
-        if (packet[i] == '\r\n' || packet[i] == '\n' || packet[i] == '\r')
-        {
-            std::string commandChange = { player.GetChattingLog().cbegin(), player.GetChattingLog().cend()};
-            std::string command = "";
-            for (auto& ele : commandChange)
-            {
-                if (ele == ' ')
-                    break;
-                
-                if (ele >= 'a' && ele <= 'z')
-                    command += ele - ( 'a' - 'A' );
-                else
-                    command += ele;
-            }
+    player.StartLock( );
+    char startReceive = player.GetPreviousReceivePosition( );
+    player.EndLock( );
 
-            StateWorkBranch( socket, command );
-            flag = true;
-            break;
-        }
-        else
-        {
-            player.StartLock();
-            player.PushChattingBuffer( packet[i] );
-            player.EndLock();
-        }
-    }
-    if (flag == false)
+    unsigned short packetSize = packet[ 0 ];
+    unsigned short currentPacketSize = startReceive;
+
+    /// 해당 패킷의 사이즈 만큼 왔는지 검사
+    /// 패킷의 사이즈만큼 다 왔다면 다음 netbuffer Read위치 초기화
+    /// 패킷의 사이즈만큼 다 안왔다면, Read위치 갱신 및 패킷 타입에 따른 처리
+ 
+    if ( packetSize > bytes + currentPacketSize )
     {
-        player.ReceivePacket();
+        player.StartLock( );
+        player.SetPreviousReceivePosition( static_cast< unsigned char >( currentPacketSize + bytes ) );
+        player.EndLock( );
     }
+
+    /// 패킷 완성 및 패킷에 따른 처리
+    else
+    {
+        char completePacket[ InitializeServer::MAX_PACKETSIZE ];
+        memcpy_s( completePacket, sizeof( completePacket ), packet, packetSize );
+        memcpy_s( packet, sizeof( InitializeServer::MAX_BUFFERSIZE ), packet + packetSize, ( bytes + currentPacketSize - packetSize ) );
+
+        Packet_Login_Request* ps =  reinterpret_cast< Packet_Login_Request* >( completePacket );
+
+        std::cout << ps->name << std::endl;
+
+        ///Process Packet
+        player.StartLock( );
+        player.SetPreviousReceivePosition( static_cast< unsigned char >( bytes + currentPacketSize - packetSize ) );
+        player.EndLock( );
+    }   
+
+    player.ReceivePacket( );
+
     return true;
 }
 

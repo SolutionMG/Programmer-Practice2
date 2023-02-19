@@ -6,7 +6,7 @@
 
 PlayerInfo::PlayerInfo() : m_name{ " " }, m_roomNumber{ -1 }, m_roomInTime{ "" }
 {
-	m_chattingBuffer.reserve( InitailizeServer::MAX_BUFFERSIZE );
+	m_chattingBuffer.reserve( InitializeServer::MAX_BUFFERSIZE );
 }
 
 PlayerInfo::~PlayerInfo() noexcept = default;

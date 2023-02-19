@@ -2,13 +2,17 @@
 
 
 #include "ServerManager.h"
-
-
-#define SERVERPORT 9000
+#include "ServerProtocol.h"
 
 
 void UServerManager::Init()
 {
+}
+
+void UServerManager::Shutdown( )
+{
+	closesocket( m_socket );
+	WSACleanup( );
 }
 
 bool UServerManager::ConnectToServer()
@@ -30,7 +34,7 @@ bool UServerManager::ConnectToServer()
 
 	ZeroMemory( &m_sockAddr, sizeof( m_sockAddr ) );
 	m_sockAddr.sin_family = AF_INET;
-	m_sockAddr.sin_port = htons( SERVERPORT );
+	m_sockAddr.sin_port = htons( InitializeServer::SERVERPORT );
 	inet_pton( AF_INET, SERVERIP, &m_sockAddr.sin_addr );
 
 	///논블로킹으로 소켓 connect 요청
@@ -48,7 +52,7 @@ bool UServerManager::ConnectToServer()
 
 		fd_set readSet, writeSet;
 		FD_ZERO( &readSet );
-		///5초 동안 기다리기 - 연결여부 확인
+		///5초 동안 기다리기 - 연결여부 확인, 연결이 되었으면 즉시 종료
 		timeval timeOut = { 5, 0 };
 		FD_SET( m_socket, &readSet );
 		writeSet = readSet;
@@ -72,7 +76,6 @@ bool UServerManager::ConnectToServer()
 	}
 	return true;
 }
-
 
 int UServerManager::CreateSocket()
 {
@@ -104,3 +107,72 @@ int UServerManager::CreateSocket()
 	return 0;
 }
 
+void UServerManager::SendPacket( int32 type, const FString& packet )
+{
+
+	if ( packet.IsEmpty( ) )
+		return;
+
+	switch ( type )
+	{
+	case PacketTypes::LOGIN:
+	{
+		if ( packet.Len( ) > 32 )
+		{
+			UE_LOG( LogTemp, Warning, TEXT( "최대 이름길이 초과 Failed" ) );
+			return;
+		}
+
+		Packet_Login_Request format;
+		format.info.size = sizeof( Packet_Login_Request );
+		format.info.type = PacketTypes::LOGIN;
+	
+		const wchar_t* encode = *packet;
+		char defaultSetting = '?';
+		WideCharToMultiByte( CP_ACP, 0, encode, -1, format.name, 32, &defaultSetting, NULL );
+
+		send( m_socket, reinterpret_cast< char* >( &format ), format.info.size, 0 );
+		
+	}
+	break;
+	default:
+	break;
+	}
+
+}
+
+void UServerManager::ReceivePacket( )
+{
+	char buf[ InitializeServer::MAX_BUFFERSIZE ];
+	char* packet = buf;
+	int received = 0;
+	int left = 2; // 처음에 size, type를 미리 받기 위함
+
+	bool init_come = true;
+
+	while ( left > 0 || init_come )
+	{
+		received = recv( m_socket, packet, left, 0 );
+		if ( received == SOCKET_ERROR )//에러 발생
+			return;
+		else if ( received == 0 ) //받은게 없음
+			break;
+
+		if ( init_come )
+		{
+			left = buf[ 0 ] - received;
+			packet += received;
+			init_come = false;
+		}
+		else
+		{
+			left -= received;
+			packet += received;
+
+			if ( left == 0 ) {
+				//Process_Packet( buf );
+				return;
+			}
+		}
+	}
+}

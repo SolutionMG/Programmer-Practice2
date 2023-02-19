@@ -12,12 +12,10 @@
 #include "Windows/PostWindowsApi.h"
 #include "Windows/HideWindowsPlatformTypes.h"
 
-
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "ServerManager.generated.h"
 
-#define SERVERPORT 9000
 #define SERVERIP "127.0.0.1"
 /**
  * 
@@ -29,12 +27,23 @@ class CHATTINGCLIENT_API UServerManager : public UGameInstance
 private:
 	SOCKET m_socket;
 	SOCKADDR_IN m_sockAddr;
+	FString m_name;
 public:
 
-	virtual void Init() override;
+	///ServerManager 초기화 함수
+	virtual void Init( ) override;
+
+	///ServerManager 종료 전 Cleanup 함수
+	virtual void Shutdown( ) override;
 
 	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
 	bool ConnectToServer();
+
+	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
+	void SendPacket( int32 type, const FString& packet );
+
+	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
+	void ReceivePacket( );
 
 private:
 	int CreateSocket();

@@ -68,5 +68,8 @@
     <ClInclude Include="Define.h">
       <Filter>99.Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ChattingClient\Source\ChattingClient\ServerProtocol.h">
+      <Filter>99.Header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

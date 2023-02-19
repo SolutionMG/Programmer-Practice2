@@ -4,11 +4,12 @@
 #include "ClientInfo.h"
 
 
-ClientInfo::ClientInfo() : m_socket{ INVALID_SOCKET }, m_over{ WSAOVERLAPPED_EXTEND() }, m_state{ EClientState::END }
+ClientInfo::ClientInfo( ) : m_socket { INVALID_SOCKET }, m_over { WSAOVERLAPPED_EXTEND( ) }, m_state { EClientState::END }, m_previousReceivePosition( 0 )
 {
 	ZeroMemory(&m_over, sizeof(m_over));
 	m_over.wsaBuffer.buf = m_over.networkBuffer;
-	m_over.wsaBuffer.len = InitailizeServer::MAX_BUFFERSIZE;
+	m_over.wsaBuffer.len = InitializeServer::MAX_BUFFERSIZE;
+
 }
 
 ClientInfo::~ClientInfo() noexcept = default;
@@ -18,8 +19,8 @@ void ClientInfo::ReceivePacket()
 	/// Overlapped Receive ø‰√ª
 	m_receiveLock.lock();
 	ZeroMemory(&m_over, sizeof(m_over));
-	m_over.wsaBuffer.buf = m_over.networkBuffer;
-	m_over.wsaBuffer.len = InitailizeServer::MAX_BUFFERSIZE;
+	m_over.wsaBuffer.buf = m_over.networkBuffer + m_previousReceivePosition;
+	m_over.wsaBuffer.len = InitializeServer::MAX_BUFFERSIZE;
 	m_over.opType = EOperationType::RECV;
 	DWORD flag = 0;
 	WSARecv(m_socket, &m_over.wsaBuffer, 1, NULL, &flag, &m_over.over, NULL);
@@ -68,6 +69,11 @@ const EClientState& ClientInfo::GetState()const
 	return m_state;
 }
 
+const unsigned char& ClientInfo::GetPreviousReceivePosition( )
+{
+	return m_previousReceivePosition;
+}
+
 void ClientInfo::SetOverlappedExtend( const WSAOVERLAPPED_EXTEND& over )
 {
 	memcpy_s( &m_over, sizeof( m_over ), &over, sizeof( over ) );
@@ -80,5 +86,10 @@ void ClientInfo::SetOverlappedOperation( const EOperationType& operation )
 void ClientInfo::SetState( const EClientState& state )
 {
 	m_state = state;
+}
+
+void ClientInfo::SetPreviousReceivePosition( const unsigned char& position )
+{
+	m_previousReceivePosition = position;
 }
 

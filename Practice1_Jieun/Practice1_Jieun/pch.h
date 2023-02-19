@@ -21,6 +21,7 @@
 
 ///USER
 #include "Define.h"
+#include "../../ChattingClient/Source/ChattingClient/ServerProtocol.h"
 
 
 ///OPERATION TYPE
@@ -35,7 +36,7 @@ struct WSAOVERLAPPED_EXTEND
 {
 	WSAOVERLAPPED	over;
 	WSABUF			wsaBuffer;
-	char			networkBuffer[InitailizeServer::MAX_BUFFERSIZE];
+	char			networkBuffer[InitializeServer::MAX_BUFFERSIZE];
 	EOperationType	opType;
 	SOCKET			socket;
 };
