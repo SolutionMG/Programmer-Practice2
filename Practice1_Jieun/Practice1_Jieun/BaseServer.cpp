@@ -278,10 +278,9 @@ bool BaseServer::StateWorkBranch( const SOCKET& socket, const std::string& comma
     {
     case EClientState::ACCESS:
     {
-        std::string message = { player.GetChattingLog().cbegin(), player.GetChattingLog().cend()};
         player.EndLock();
 
-        if (message.length() < sizeof(CommandMessage::LOGON) + 1)
+        if (command.length() < sizeof(CommandMessage::LOGON) + 1)
         {
             player.StartLock();
             player.ClearChattingBuffer();
@@ -292,9 +291,10 @@ bool BaseServer::StateWorkBranch( const SOCKET& socket, const std::string& comma
             break;
         }
 
-        if (command == CommandMessage::LOGON && message[5] == ' ')
+        std::string_view checkCommand = { command.cbegin(), command.cbegin() + sizeof(CommandMessage::LOGON) - 1 };
+        if (checkCommand == CommandMessage::LOGON && command[5] == ' ')
         {
-            m_logOn.push( socket );
+            m_logOn.push(socket);
         }
         else
         {
@@ -1215,44 +1215,7 @@ bool BaseServer::ReassemblePacket( char* packet, const DWORD& bytes, const SOCKE
         player.ReceivePacket();
     }
 
-    /* 패킷 단위 재조립
-    player.StartLock( );
-    char startReceive = player.GetPreviousReceivePosition( );
-    player.EndLock( );
-
-    unsigned short packetSize = packet[ 0 ];
-    unsigned short currentPacketSize = startReceive;
-
-    /// 해당 패킷의 사이즈 만큼 왔는지 검사
-    /// 패킷의 사이즈만큼 다 왔다면 다음 netbuffer Read위치 초기화
-    /// 패킷의 사이즈만큼 다 안왔다면, Read위치 갱신 및 패킷 타입에 따른 처리
- 
-    if ( packetSize > bytes + currentPacketSize )
-    {
-        player.StartLock( );
-        player.SetPreviousReceivePosition( static_cast< unsigned char >( currentPacketSize + bytes ) );
-        player.EndLock( );
-    }
-
-    /// 패킷 완성 및 패킷에 따른 처리
-    else
-    {
-        char completePacket[ InitializeServer::MAX_PACKETSIZE ];
-        memcpy_s( completePacket, sizeof( completePacket ), packet, packetSize );
-        memcpy_s( packet, sizeof( InitializeServer::MAX_BUFFERSIZE ), packet + packetSize, ( bytes + currentPacketSize - packetSize ) );
-
-        Packet_Login_Request* ps =  reinterpret_cast< Packet_Login_Request* >( completePacket );
-
-        std::cout << ps->name << std::endl;
-
-        ///Process Packet
-        player.StartLock( );
-        player.SetPreviousReceivePosition( static_cast< unsigned char >( bytes + currentPacketSize - packetSize ) );
-        player.EndLock( );
-    }   
-
-    player.ReceivePacket( );
-    */
+    
     return true;
 }
 
