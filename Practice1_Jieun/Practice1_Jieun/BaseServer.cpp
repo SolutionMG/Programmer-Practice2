@@ -260,9 +260,9 @@ bool BaseServer::AddNewClient( const SOCKET& socket )
 
     /// 로그인 요청 메시지 전송
     m_playersLock.lock();
-    m_players[socket].SendPacket( RenderMessageMacro::ACCESSMESSAGE );
-    m_players[socket].SendPacket( RenderMessageMacro::LOGONREQUEST );
-    m_players[socket].SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+    m_players[socket].SendPacket( RenderMessageMacro::ACCESS_MESSAGE );
+    m_players[socket].SendPacket( RenderMessageMacro::LOGON_REQUEST );
+    m_players[socket].SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     m_playersLock.unlock();
 
     return true;
@@ -285,8 +285,8 @@ bool BaseServer::StateWorkBranch( const SOCKET& socket, const std::string& comma
             player.StartLock();
             player.ClearChattingBuffer();
             player.EndLock();
-            player.SendPacket( RenderMessageMacro::LOGONREQUEST );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::LOGON_REQUEST );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
             player.ReceivePacket();
             break;
         }
@@ -301,8 +301,8 @@ bool BaseServer::StateWorkBranch( const SOCKET& socket, const std::string& comma
             player.StartLock();
             player.ClearChattingBuffer();
             player.EndLock();
-            player.SendPacket( RenderMessageMacro::LOGONREQUEST );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::LOGON_REQUEST );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
             player.ReceivePacket();
         }
     }
@@ -323,7 +323,7 @@ bool BaseServer::StateWorkBranch( const SOCKET& socket, const std::string& comma
         player.EndLock();
         
         player.ReceivePacket();
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     }
     break;
     case EClientState::END:
@@ -358,7 +358,7 @@ bool BaseServer::CommandWorkBranch( const SOCKET& socket, const std::string& com
         player.ClearChattingBuffer();
         player.EndLock();
 
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -372,8 +372,8 @@ bool BaseServer::CommandWorkBranch( const SOCKET& socket, const std::string& com
             player.StartLock();
             player.ClearChattingBuffer();
             player.EndLock();
-            player.SendPacket( RenderMessageMacro::NOCOMMANDMESSAGE );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::NOCOMMAND_MESSAGE );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
             player.ReceivePacket();
             flag = false;
         }
@@ -410,8 +410,8 @@ bool BaseServer::CommandWorkBranch( const SOCKET& socket, const std::string& com
             player.StartLock();
             player.ClearChattingBuffer();
             player.EndLock();
-            player.SendPacket( RenderMessageMacro::NOCOMMANDMESSAGE );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::NOCOMMAND_MESSAGE );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
             player.ReceivePacket();
             flag = false;
         }
@@ -433,11 +433,11 @@ bool BaseServer::ReqeustCommandList( const SOCKET& socket )
     auto& player = m_players[socket];
     m_playersLock.unlock();
 
-    player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
-    player.SendPacket( RenderMessageMacro::GUIDEMESSAGE );
-    player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
-    player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-    player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+    player.SendPacket( RenderMessageMacro::GUIDE_MESSAGE );
+    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+    player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     player.ReceivePacket();
 
     return true;
@@ -460,15 +460,15 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
 
     if (message.length() < 4)
     {
-        player.SendPacket(RenderMessageMacro::FAILEDCOMMANDMESSAGE);
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket(RenderMessageMacro::FAILED_COMMAND_MESSAGE);
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
 
     if (message[2] != ' ')
     {
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -510,8 +510,8 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
         {
             userInfo += "님은 로비에 있습니다.\n\r";
             player.SendPacket( userInfo.c_str());
-            player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         }
         break;
         case EClientState::ROOM:
@@ -528,7 +528,7 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
             userInfo += "번 방에 있습니다.\n\r";
 
             player.SendPacket( userInfo.c_str() );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         }
         break;
         case EClientState::EXIT:
@@ -545,9 +545,9 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
     }
     else
     {
-        player.SendPacket( RenderMessageMacro::USERINFOMESSAGEFAILED );
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::USERINFO_MESSAGE_FAILED );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     }
     m_players[socket].ReceivePacket();
 
@@ -564,7 +564,7 @@ bool BaseServer::RequestUserList( const SOCKET& socket )
 
     if ( message.length() > 2 )
     {
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -583,9 +583,9 @@ bool BaseServer::RequestUserList( const SOCKET& socket )
     m_playersLock.unlock();
 
     player.SendPacket( userNameList.c_str() );
-    player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
-    player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-    player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+    player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     player.ReceivePacket();
     return true;
 }
@@ -600,16 +600,16 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
 
     if (message.length() < 4)
     {
-        player.SendPacket( RenderMessageMacro::NOCOMMANDMESSAGE );
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket( RenderMessageMacro::NOCOMMAND_MESSAGE );
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
 
     if ( message[2] != ' ' )
     {
-        player.SendPacket( RenderMessageMacro::NOCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::NOCOMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -621,8 +621,8 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
 
     if (isNumber < 0 || isNumber > 9)
     {
-        player.SendPacket( RenderMessageMacro::FAILEDCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::FAILED_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -676,9 +676,9 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
                 sendMessage += "\n\r";
                 m_playersLock.unlock();
             }
-            player.SendPacket(RenderMessageMacro::ROOMINFOLINEMESSAGE);
+            player.SendPacket(RenderMessageMacro::ROOMINFO_LINE_MESSAGE);
             player.SendPacket(sendMessage.c_str());
-            player.SendPacket(RenderMessageMacro::DIVIDELINEMESSAGE);
+            player.SendPacket(RenderMessageMacro::DIVIDE_LINE_MESSAGE);
             
             break;
         }
@@ -690,7 +690,7 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
         player.SendPacket("존재하지 않는 방입니다.\n\r");
     }
 
-    player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     player.ReceivePacket();
     return true;
 }
@@ -705,9 +705,9 @@ bool BaseServer::RequestNote( const SOCKET& socket )
 
     if (message.length() <= 2)
     {
-        player.SendPacket( RenderMessageMacro::FAILEDCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::FAILED_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -754,16 +754,16 @@ bool BaseServer::RequestNote( const SOCKET& socket )
     if ( isExistPlayer == false )
     {
         player.SendPacket("존재하지 않는 유저입니다.\n\r");
-        player.SendPacket(RenderMessageMacro::SELECTCOMMANDMESSAGE);
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket(RenderMessageMacro::SELECT_COMMAND_MESSAGE);
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     }
     else
     {
         if ( name == player.GetName() )
         {
             player.SendPacket("본인에게는 귓속말을 할 수 없습니다.\n\r");
-            player.SendPacket(RenderMessageMacro::SELECTCOMMANDMESSAGE);
-            player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+            player.SendPacket(RenderMessageMacro::SELECT_COMMAND_MESSAGE);
+            player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         }
         else
         {
@@ -775,7 +775,7 @@ bool BaseServer::RequestNote( const SOCKET& socket )
             name += "귓속말을 보냈습니다.\n\r";
 
             player.SendPacket( name.c_str() );
-            player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         }
 
     }
@@ -796,9 +796,9 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
     ///[예외처리] 양식에 맞지 않음
     if ( message.length() <= 4 )
     {
-        player.SendPacket( RenderMessageMacro::FAILEDCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::FAILED_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -827,10 +827,10 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
     /// 방이름이 없음
     if ( roomName.empty() == true )
     {
-        player.SendPacket(RenderMessageMacro::CREATEROOMFAILEDOVERUSERS);
-        player.SendPacket(RenderMessageMacro::ROOMENTERNONAMEMESSAGE);
-        player.SendPacket(RenderMessageMacro::SELECTCOMMANDMESSAGE);
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket(RenderMessageMacro::CREATE_ROOM_FAILED_OVERUSERS);
+        player.SendPacket(RenderMessageMacro::ROOM_ENTER_NONAME_MESSAGE);
+        player.SendPacket(RenderMessageMacro::SELECT_COMMAND_MESSAGE);
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
     }
 
@@ -839,10 +839,10 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
     /// 인원 초과
     if ( maxUser < InitializeRoom::MIN_ROOMPLAYER || maxUser > InitializeRoom::MAX_ROOMPLAYER )
     {
-        player.SendPacket(RenderMessageMacro::CREATEROOMFAILEDOVERUSERS);
-        player.SendPacket(RenderMessageMacro::FAILEDCOMMANDMESSAGE);
-        player.SendPacket(RenderMessageMacro::SELECTCOMMANDMESSAGE);
-        player.SendPacket(RenderMessageMacro::COMMANDWAITMESSAGE);
+        player.SendPacket(RenderMessageMacro::CREATE_ROOM_FAILED_OVERUSERS );
+        player.SendPacket(RenderMessageMacro::FAILED_COMMAND_MESSAGE);
+        player.SendPacket(RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -890,9 +890,9 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
     enterMessage += max;
     enterMessage += ")\n\r";
 
-    player.SendPacket( RenderMessageMacro::CREATEROOMSUCCESSMESSAGE );
+    player.SendPacket( RenderMessageMacro::CREATE_ROOM_SUCCESS_MESSAGE );
     player.SendPacket( enterMessage.c_str() );
-    player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     player.ReceivePacket();
 
     return true;
@@ -909,8 +909,8 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
 
     if (message[1] != ' ')
     {
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -925,9 +925,9 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
 
     if (iter == enditer)
     {
-        player.SendPacket( RenderMessageMacro::ROOMENTERFAILEDMESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::ROOM_ENTER_FAILED_MESSAGE );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -945,9 +945,9 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
     ///최대 인원 제한
     if (total == max)
     {
-        player.SendPacket( RenderMessageMacro::ROOMENTERFULLMESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::ROOM_ENTER_FAILED_MESSAGE );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return false;
     }
@@ -992,7 +992,7 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
     for ( const auto& user : roomUserIndex )
     {
         m_players[user].SendPacket( enterMessage.c_str() );
-        m_players[user].SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        m_players[user].SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     }
     m_playersLock.unlock();
     player.ReceivePacket();
@@ -1015,8 +1015,8 @@ bool BaseServer::RequestRoomList( const SOCKET& socket )
     {
         /// 방이 없음.
         player.SendPacket("방이 존재하지 않습니다.\n\r");
-        player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         player.ReceivePacket();
         return true;
     }
@@ -1048,11 +1048,11 @@ bool BaseServer::RequestRoomList( const SOCKET& socket )
     }
     m_chattRoomLock.unlock();
 
-    player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
+    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
     player.SendPacket( roomsInfo.c_str() );
-    player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
-    player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-    player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+    player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
     player.ReceivePacket();
 
     return true;
@@ -1112,11 +1112,11 @@ void BaseServer::LogOnCommandProcess()
                 std::cout << name.c_str() << "[" << socket << "] LogOn" << std::endl;
 
                 ///클라이언트에 로그인 성공 문구 출력
-                player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
-                player.SendPacket( RenderMessageMacro::SUCCESSLOGONMESSAGE );
-                player.SendPacket( RenderMessageMacro::DIVIDELINEMESSAGE );
-                player.SendPacket( RenderMessageMacro::SELECTCOMMANDMESSAGE );
-                player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+                player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+                player.SendPacket( RenderMessageMacro::SUCCESS_LOGON_MESSAGE );
+                player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+                player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+                player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
                 player.ReceivePacket();
             }
 
@@ -1127,8 +1127,8 @@ void BaseServer::LogOnCommandProcess()
                 player.EndLock();
 
                 ///클라이언트에 로그인 실패 문구 출력
-                player.SendPacket( RenderMessageMacro::LOGONFAILED );
-                player.SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+                player.SendPacket( RenderMessageMacro::LOGON_FAILED );
+                player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
                 player.ReceivePacket();
             }
         }
@@ -1167,7 +1167,7 @@ bool BaseServer::Chatting( const SOCKET& socket )
         }
         m_playersLock.lock();
         m_players[playersIndex[i]].SendPacket( userMessage.c_str() );
-        m_players[playersIndex[i]].SendPacket( RenderMessageMacro::COMMANDWAITMESSAGE );
+        m_players[playersIndex[i]].SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
         m_playersLock.unlock();
     }
 

@@ -131,8 +131,12 @@ bool UServerManager::ReceivePacket( )
 
 bool UServerManager::ProcessPacket( const FString& packet )
 {
-	
-	UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);
+	//	UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);
+	if ( packet.Contains(SearchMacro::SEARCH_SUCCESS_LOGON) )
+	{
+		return true;
+	}
+
 
 	return false;
 }
