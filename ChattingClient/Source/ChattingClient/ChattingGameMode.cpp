@@ -2,7 +2,7 @@
 
 
 #include "ChattingGameMode.h"
-
+#include "ServerManager.h"
 
 void AChattingGameMode::BeginPlay( )
 {
@@ -11,6 +11,14 @@ void AChattingGameMode::BeginPlay( )
 }
 void AChattingGameMode::Tick( float DeletaSecond )
 {
+	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
+	if ( server == NULL )
+	{
+		UE_LOG( LogTemp, Warning, TEXT( "AChattingGameMode::Tick GetserverInstance Failed" ) );
+		return;
+	}
+	server->ReceivePacket();
+	
 
 }
 void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass )

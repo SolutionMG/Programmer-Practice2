@@ -149,14 +149,57 @@ bool UServerManager::SendPacket(const FString& packet)
 	char name[InitializeServer::MAX_BUFFERSIZE];
 	const wchar_t* encode = *packetEnd;
 	char defaultSetting = '?';
-	WideCharToMultiByte(CP_ACP, 0, encode, -1, name, sizeof(name), &defaultSetting, NULL);
 
-	return send(m_socket, reinterpret_cast<char*>(&name), sizeof(name), 0) > 0;
+	int len = WideCharToMultiByte( CP_ACP, 0, encode, -1, NULL, 0 , NULL , NULL );
+	WideCharToMultiByte(CP_ACP, 0, encode, -1, name, len, &defaultSetting, NULL);
+
+	return send(m_socket, reinterpret_cast<char*>(&name), sizeof( name ), 0) > 0;
 }
 
 bool UServerManager::ReceivePacket( )
 {
-	//while()
+	char buf[ InitializeServer::MAX_BUFFERSIZE ];
+	FString encode;
+	char* packet = buf;
+	int received = 0;
+
+	received = recv( m_socket, packet, sizeof( packet ), 0 );
+	if ( received == SOCKET_ERROR )
+	{
+		return false;
+	}
+	///받은 데이터 없음
+	else if ( received == 0 )
+	{
+		return true;
+	}
+
+	if ( !packet )
+	{
+		return false;
+	}
+
+	for ( int32 i = 0; i < received; ++i )
+	{
+		m_multibyteBuffer.Push( packet[ i ] );
+		if ( packet[ i ] == '\n\r' || packet[ i ] == '\r' || packet[ i ] == '\n' )
+		{
+			wchar_t encodebuf[ InitializeServer::MAX_BUFFERSIZE ];
+			int len = MultiByteToWideChar( CP_ACP, 0, packet, strlen( packet ), NULL, NULL );
+			MultiByteToWideChar( CP_ACP, 0, packet, strlen( packet ), encodebuf, len );
+
+			ProcessPacket( m_encodingBuffer );
+			m_encodingBuffer = "";
+		}
+	}
+
+	return true;
+}
+
+bool UServerManager::ProcessPacket( const FString& packet )
+{
+	
+	UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);
 
 	return false;
 }

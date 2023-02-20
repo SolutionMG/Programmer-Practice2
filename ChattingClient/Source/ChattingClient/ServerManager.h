@@ -28,6 +28,8 @@ private:
 	SOCKET m_socket;
 	SOCKADDR_IN m_sockAddr;
 	FString m_name;
+	TArray<char> m_multibyteBuffer;
+	FString m_encodingBuffer;
 public:
 
 	///ServerManager 초기화 함수
@@ -48,7 +50,9 @@ public:
 	bool SendPacket(const FString& packet);
 
 	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
-	bool ReceivePacket( );
+	bool ReceivePacket();
+
+	bool ProcessPacket( const FString& packet );
 
 private:
 	int CreateSocket();

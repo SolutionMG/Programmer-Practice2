@@ -1187,26 +1187,26 @@ bool BaseServer::ReassemblePacket( char* packet, const DWORD& bytes, const SOCKE
     bool flag = false;
     for (DWORD i = 0; i < bytes; ++i)
     {
-        if (packet[i] == '\r\n' || packet[i] == '\n' || packet[i] == '\r')
+        if ( packet[ i ] == '\r\n' || packet[ i ] == '\n' || packet[ i ] == '\r' )
         {
             std::string command = { player.GetChattingLog().cbegin(), player.GetChattingLog().cend() };
-            for (auto& ele : command)
+            for ( auto& ele : command )
             {
-                if (ele == ' ')
+                if ( ele == ' ' )
                     break;
 
-                if (ele >= 'a' && ele <= 'z')
+                if ( ele >= 'a' && ele <= 'z' )
                     ele -= 'a' - 'A';
             }
 
-            StateWorkBranch(socket, command);
+            StateWorkBranch( socket, command );
             flag = true;
             break;
         }
         else
         {
             player.StartLock();
-            player.PushChattingBuffer(packet[i]);
+            player.PushChattingBuffer( packet[ i ] );
             player.EndLock();
         }
     }
