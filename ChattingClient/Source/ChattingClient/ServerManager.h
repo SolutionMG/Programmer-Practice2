@@ -2,15 +2,12 @@
 
 #pragma once
 
-
 #include "Windows/AllowWindowsPlatformTypes.h"
-#include "Windows/prewindowsapi.h"
-#include<WS2tcpip.h>
-#include<MSWSock.h>
-#pragma comment(lib,"WS2_32.lib")
-#pragma comment(lib, "mswsock.lib")
-#include "Windows/PostWindowsApi.h"
-#include "Windows/HideWindowsPlatformTypes.h"
+#include "Networking/Public/Interfaces/IPv4/IPv4Address.h"
+#include "Engine.h"
+#include "Networking.h"
+#include "Sockets.h"
+#include "SocketSubsystem.h"
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
@@ -25,10 +22,8 @@ class CHATTINGCLIENT_API UServerManager : public UGameInstance
 {
 	GENERATED_BODY()
 private:
-	SOCKET m_socket;
-	SOCKADDR_IN m_sockAddr;
+	FSocket* m_socket;
 	FString m_name;
-	TArray<char> m_multibyteBuffer;
 	FString m_encodingBuffer;
 public:
 
@@ -54,7 +49,5 @@ public:
 
 	bool ProcessPacket( const FString& packet );
 
-private:
-	int CreateSocket();
 
 };

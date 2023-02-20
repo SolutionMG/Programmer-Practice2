@@ -1199,6 +1199,7 @@ bool BaseServer::ReassemblePacket( char* packet, const DWORD& bytes, const SOCKE
                     ele -= 'a' - 'A';
             }
 
+            std::cout << command << std::endl;
             StateWorkBranch( socket, command );
             flag = true;
             break;

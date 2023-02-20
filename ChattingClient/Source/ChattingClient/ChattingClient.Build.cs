@@ -8,7 +8,7 @@ public class ChattingClient : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UMG", "Networking", "Sockets" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

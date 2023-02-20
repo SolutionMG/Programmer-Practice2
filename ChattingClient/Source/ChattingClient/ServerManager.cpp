@@ -4,107 +4,36 @@
 #include "ServerManager.h"
 #include "ServerProtocol.h"
 
-
 void UServerManager::Init()
 {
+	m_encodingBuffer = "";
 }
 
 void UServerManager::Shutdown( )
 {
-	closesocket( m_socket );
-	WSACleanup( );
+	m_socket->Close( );
 }
 
 bool UServerManager::ConnectToServer()
 {
-	WSADATA wsaData;
-	int returnValue = WSAStartup( MAKEWORD( 2, 2 ), &wsaData );
-	if (returnValue != 0)
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "WSAStartup Failed" ) );
+	m_socket = ISocketSubsystem::Get( PLATFORM_SOCKETSUBSYSTEM )->CreateSocket( NAME_Stream, TEXT( "default" ) );
+	if ( !m_socket )
 		return false;
-	}
 
-	returnValue = CreateSocket();
-	if (returnValue != 0)
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "CreateSocket Failed" ) );
+
+	FIPv4Address ip;
+	if ( !FIPv4Address::Parse( SERVERIP, ip ) )
 		return false;
-	}
 
-	ZeroMemory( &m_sockAddr, sizeof( m_sockAddr ) );
-	m_sockAddr.sin_family = AF_INET;
-	m_sockAddr.sin_port = htons( InitializeServer::SERVERPORT );
-	inet_pton( AF_INET, SERVERIP, &m_sockAddr.sin_addr );
+	TSharedRef<FInternetAddr> address = ISocketSubsystem::Get( PLATFORM_SOCKETSUBSYSTEM )->CreateInternetAddr( );
+	address->SetIp( ip.Value );
+	address->SetPort( InitializeServer::SERVERPORT );
 
-	///논블로킹으로 소켓 connect 요청
-	///select를 사용하여 connect의  timeout 5초 부여  
-	returnValue = connect( m_socket, ( sockaddr FAR* ) & m_sockAddr, sizeof( m_sockAddr ) );
+	bool connect = m_socket->Connect( *address );
+	m_socket->SetNonBlocking( true );
+	m_socket->SetNoDelay( true );
 
-	if (returnValue != 0)
-	{
-		int error = WSAGetLastError();
-		if (error != EINPROGRESS && errno != EWOULDBLOCK && error != WSAEWOULDBLOCK)
-		{
-			UE_LOG( LogTemp, Warning, TEXT( "connect Failed" ) );
-			return false;
-		}
-
-		fd_set readSet, writeSet;
-		FD_ZERO( &readSet );
-		///5초 동안 기다리기 - 연결여부 확인, 연결이 되었으면 즉시 종료
-		timeval timeOut = { 5, 0 };
-		FD_SET( m_socket, &readSet );
-		writeSet = readSet;
-
-		returnValue = select( 1, &readSet, &writeSet, NULL, &timeOut );
-
-		if (returnValue <= 0)
-		{
-			UE_LOG( LogTemp, Warning, TEXT( "select / connect time out" ) );
-			return false;
-		}
-
-		error = 0;
-		socklen_t length = sizeof( error );
-		if (getsockopt( m_socket, SOL_SOCKET, SO_ERROR, ( char* )&error, &length ) < 0 || error != 0)
-		{
-			UE_LOG( LogTemp, Warning, TEXT( "select / connect time out" ) );
-			return false;
-		}
-
-	}
 	return true;
-}
-
-int UServerManager::CreateSocket()
-{
-	m_socket = WSASocket( AF_INET, SOCK_STREAM, 0, NULL, 0, 0 );
-	if (m_socket == INVALID_SOCKET)
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "WSASocket Failed" ) );
-		return -1;
-	}
-
-	//non block
-	unsigned long noblock = 1;
-	int returnValue = ioctlsocket( m_socket, FIONBIO, &noblock );
-	if (returnValue != 0)
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "ioctlsocket Failed" ) );
-		return -1;
-	}
-
-	//nagle off
-	int socketOption = 1;
-	returnValue = setsockopt( m_socket, SOL_SOCKET, TCP_NODELAY, reinterpret_cast< const char* >( &socketOption ), sizeof( socketOption ) );
-	if (returnValue != 0)
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "ioctlsocket Failed" ) );
-		return -1;
-	}
-
-	return 0;
 }
 
 /*
@@ -144,52 +73,56 @@ void UServerManager::SendPacket( int32 type, const FString& packet )
 
 bool UServerManager::SendPacket(const FString& packet)
 {
+	if ( !m_socket )
+		return false;
+
 	FString packetEnd = packet;
 	packetEnd += "\n";
-	char name[InitializeServer::MAX_BUFFERSIZE];
+	char message[InitializeServer::MAX_BUFFERSIZE];
 	const wchar_t* encode = *packetEnd;
 	char defaultSetting = '?';
+	
+	int32 len = WideCharToMultiByte( CP_ACP, 0, encode, -1, NULL, 0 , NULL , NULL );
+	WideCharToMultiByte(CP_ACP, 0, encode, -1, message, len, &defaultSetting, NULL);
+	int32 bytesSents = 0;
 
-	int len = WideCharToMultiByte( CP_ACP, 0, encode, -1, NULL, 0 , NULL , NULL );
-	WideCharToMultiByte(CP_ACP, 0, encode, -1, name, len, &defaultSetting, NULL);
-
-	return send(m_socket, reinterpret_cast<char*>(&name), sizeof( name ), 0) > 0;
+	return m_socket->Send( ( uint8* ) ( message ), len, bytesSents );
 }
 
 bool UServerManager::ReceivePacket( )
 {
-	char buf[ InitializeServer::MAX_BUFFERSIZE ];
-	FString encode;
-	char* packet = buf;
-	int received = 0;
+	if ( !m_socket )
+		return false;
 
-	received = recv( m_socket, packet, sizeof( packet ), 0 );
-	if ( received == SOCKET_ERROR )
+	char buf[ InitializeServer::MAX_BUFFERSIZE ] = { NULL, };
+	int32 bytesSents = 0;
+	FString encode;
+
+	bool returnValue = m_socket->Recv( ( uint8* ) ( buf ), InitializeServer::MAX_BUFFERSIZE - 1, bytesSents );
+	if ( !returnValue )
 	{
 		return false;
 	}
 	///받은 데이터 없음
-	else if ( received == 0 )
+	else if ( bytesSents == 0 )
 	{
 		return true;
 	}
 
-	if ( !packet )
-	{
-		return false;
-	}
+	wchar_t encodebuf[ InitializeServer::MAX_BUFFERSIZE ] = {NULL, };
+	int32 len = MultiByteToWideChar( CP_ACP, 0, buf, strlen( buf ) , NULL, NULL );
+	MultiByteToWideChar( CP_ACP, 0, buf, strlen( buf ) , encodebuf, len );
 
-	for ( int32 i = 0; i < received; ++i )
+	for ( int32 i = 0; i <= len; ++i )
 	{
-		m_multibyteBuffer.Push( packet[ i ] );
-		if ( packet[ i ] == '\n\r' || packet[ i ] == '\r' || packet[ i ] == '\n' )
+		if ( encodebuf[ i ] == '\0' )
 		{
-			wchar_t encodebuf[ InitializeServer::MAX_BUFFERSIZE ];
-			int len = MultiByteToWideChar( CP_ACP, 0, packet, strlen( packet ), NULL, NULL );
-			MultiByteToWideChar( CP_ACP, 0, packet, strlen( packet ), encodebuf, len );
-
 			ProcessPacket( m_encodingBuffer );
 			m_encodingBuffer = "";
+		}
+		else
+		{
+			m_encodingBuffer += encodebuf[ i ];
 		}
 	}
 
