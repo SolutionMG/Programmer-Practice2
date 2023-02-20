@@ -30,28 +30,26 @@ namespace InitializeRoom
 namespace PacketTypes
 {
 	constexpr short LOGIN = 0;
-
 }
 
-#pragma pack(push, 1)
-struct Packet_Information
-{
-	unsigned char size;
-	int type;
-};
-
-struct Packet_Login_Request
-{
-	Packet_Information info;
-	char name[ InitializePlayer::MAX_NAME ];
-};
-
-struct Packet_Login_Answer
-{
-	Packet_Information info;
-	bool isAvailable;
-};
-
-#pragma pack(pop)
+//#pragma pack(push, 1)
+//struct Packet_Information
+//{
+//	unsigned char size;
+//	int type;
+//};
+//
+//struct Packet_Login_Request
+//{
+//	Packet_Information info;
+//	char name[ InitializePlayer::MAX_NAME ];
+//};
+//
+//struct Packet_Login_Answer
+//{
+//	Packet_Information info;
+//	bool isAvailable;
+//};
+//#pragma pack(pop)
 
 #endif // !SERVER_PROTOCOL_H

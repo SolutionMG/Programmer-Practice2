@@ -39,11 +39,16 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
 	bool ConnectToServer();
 
-	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
-	void SendPacket( int32 type, const FString& packet );
+	///패킷 타입에 따른 전송 용
+	//UFUNCTION( BlueprintCallable, Category = "Server Communication" )
+	//void SendPacket( int32 type, const FString& packet );
+
+	///기존 문자열 단위 전송 용
+	UFUNCTION(BlueprintCallable, Category = "Server Communication")
+	bool SendPacket(const FString& packet);
 
 	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
-	void ReceivePacket( );
+	bool ReceivePacket( );
 
 private:
 	int CreateSocket();

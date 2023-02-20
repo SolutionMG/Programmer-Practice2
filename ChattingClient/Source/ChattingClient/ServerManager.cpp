@@ -107,13 +107,14 @@ int UServerManager::CreateSocket()
 	return 0;
 }
 
+/*
 void UServerManager::SendPacket( int32 type, const FString& packet )
 {
 
-	if ( packet.IsEmpty( ) )
-		return;
+	//if ( packet.IsEmpty( ) )
+	//	return;
 
-	switch ( type )
+	/*switch ( type )
 	{
 	case PacketTypes::LOGIN:
 	{
@@ -138,41 +139,24 @@ void UServerManager::SendPacket( int32 type, const FString& packet )
 	default:
 	break;
 	}
+}
+*/
 
+bool UServerManager::SendPacket(const FString& packet)
+{
+	FString packetEnd = packet;
+	packetEnd += "\n";
+	char name[InitializeServer::MAX_BUFFERSIZE];
+	const wchar_t* encode = *packetEnd;
+	char defaultSetting = '?';
+	WideCharToMultiByte(CP_ACP, 0, encode, -1, name, sizeof(name), &defaultSetting, NULL);
+
+	return send(m_socket, reinterpret_cast<char*>(&name), sizeof(name), 0) > 0;
 }
 
-void UServerManager::ReceivePacket( )
+bool UServerManager::ReceivePacket( )
 {
-	char buf[ InitializeServer::MAX_BUFFERSIZE ];
-	char* packet = buf;
-	int received = 0;
-	int left = 2; // 처음에 size, type를 미리 받기 위함
+	//while()
 
-	bool init_come = true;
-
-	while ( left > 0 || init_come )
-	{
-		received = recv( m_socket, packet, left, 0 );
-		if ( received == SOCKET_ERROR )//에러 발생
-			return;
-		else if ( received == 0 ) //받은게 없음
-			break;
-
-		if ( init_come )
-		{
-			left = buf[ 0 ] - received;
-			packet += received;
-			init_come = false;
-		}
-		else
-		{
-			left -= received;
-			packet += received;
-
-			if ( left == 0 ) {
-				//Process_Packet( buf );
-				return;
-			}
-		}
-	}
+	return false;
 }
