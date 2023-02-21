@@ -4,7 +4,7 @@
 #include "ServerManager.h"
 #include "ServerProtocol.h"
 #include "ChattingGameMode.h"
-
+#include "ChattingRoom_Widget.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 
@@ -141,25 +141,43 @@ bool UServerManager::ReceivePacket( )
 bool UServerManager::ProcessPacket( const FString& packet )
 {
 	///UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);	
-	if ( packet.Contains( FString(SearchMacro::SEARCH_SUCCESS_LOGON )))
+	bool isChatting = Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->GetisChattingRoom( );
+	if ( isChatting )
 	{
-		/// 로그인 성공 -> 로비로 이동
-		FString path = "/Game/UserInterfaces/LobbyWidgetBP";
-		TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-		Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeMenuWidget( widget );
-	
-		return true;
-	}
-	else if( packet.Contains( SearchMacro::SEARCH_FAILED_LOGON ) )
-	{
-		/// 로그인 실패
-		FString path = "/Game/UserInterfaces/LoginFailedWidgetBP";
-		TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-		Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
-
-		return true;
+		UUserWidget* cur = Cast<UChattingRoom_Widget>( Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->GetCurrentWidget( ) );
+		if ( cur != nullptr )
+			Cast<UChattingRoom_Widget>( cur )->AddChatLogWidget( packet );
 	}
 
+	else
+	{
 
+		if ( packet.Contains( FString( SearchMacro::SEARCH_SUCCESS_LOGON ) ) )
+		{
+			/// 로그인 성공 -> 로비로 이동
+			FString path = "/Game/UserInterfaces/LobbyWidgetBP";
+			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
+			Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->ChangeMenuWidget( widget );
+
+			return true;
+		}
+		else if ( packet.Contains( SearchMacro::SEARCH_FAILED_LOGON ) )
+		{
+			/// 로그인 실패
+			FString path = "/Game/UserInterfaces/LoginFailedWidgetBP";
+			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
+			Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->CreateUIWidget( widget );
+
+			return true;
+		}
+		else if ( packet.Contains( SearchMacro::ROOM_CREATE ) )
+		{
+			///방 생성 성공
+			FString path = "/Game/UserInterfaces/ChattingRoomWidgetBP";
+			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
+			Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->ChangeMenuWidget( widget );
+			Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->SetisChattingRoom( true );
+		}
+	}
 	return false;
 }

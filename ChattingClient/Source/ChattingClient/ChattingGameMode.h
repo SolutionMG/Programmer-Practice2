@@ -15,10 +15,31 @@ class CHATTINGCLIENT_API AChattingGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "UMG Game" )
+	TSubclassOf<UUserWidget> startingWidgetClass;
+
+
+
+private:
+	UPROPERTY( )
+	bool m_isChattingRoom;
+	/** The Widget class we will use as our menu when the game starts. */
+
+		/** The widget instance that we are using as our menu. */
+	UPROPERTY( )
+	UUserWidget* CurrentWidget;
+public:
 	UFUNCTION( )
-	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass );
+	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass);
 	UFUNCTION()
 	void CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
+
+	UFUNCTION( BlueprintCallable )
+	void SetisChattingRoom( const bool& isRoom );
+	UFUNCTION( )
+	const bool& GetisChattingRoom( );
+	UFUNCTION( )
+	UUserWidget* GetCurrentWidget( );
 
 protected:
 	/** Called when the game Starts. */
@@ -26,11 +47,5 @@ protected:
 
 	virtual void Tick( float DeletaSecond) override;
 
-	/** The Widget class we will use as our menu when the game starts. */
-	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "UMG Game" )
-	TSubclassOf<UUserWidget> startingWidgetClass;
 
-	/** The widget instance that we are using as our menu. */
-	UPROPERTY( )
-	UUserWidget* CurrentWidget;
 };

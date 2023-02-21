@@ -4,10 +4,21 @@
 #include "ChattingGameMode.h"
 #include "ServerManager.h"
 
+ UUserWidget* AChattingGameMode::GetCurrentWidget( )
+{
+	return CurrentWidget;
+}
+
 void AChattingGameMode::BeginPlay( )
 {
 	Super::BeginPlay( );
 	ChangeMenuWidget( startingWidgetClass );
+	m_isChattingRoom = false;
+}
+const bool& AChattingGameMode::GetisChattingRoom( )
+{
+	// TODO: 여기에 return 문을 삽입합니다.
+	return m_isChattingRoom;
 }
 void AChattingGameMode::Tick( float DeletaSecond )
 {
@@ -18,7 +29,6 @@ void AChattingGameMode::Tick( float DeletaSecond )
 		return;
 	}
 	server->ReceivePacket();
-	
 
 }
 void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass )
@@ -52,4 +62,9 @@ void AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass 
 			NewWidget->AddToViewport();
 		}
 	}
+}
+
+void AChattingGameMode::SetisChattingRoom( const bool& isRoom )
+{
+	m_isChattingRoom = isRoom;
 }

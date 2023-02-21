@@ -46,7 +46,7 @@ namespace RenderMessageMacro
 	constexpr char FAILED_COMMAND_MESSAGE[] = "** 양식에 맞는 메시지를 사용해 주세요.\n\r";
 	constexpr char CREATE_ROOM_FAILED_MESSAGE[] = "** 이미 동일한 이름의 방이 존재합니다. 다른 이름을 사용해주세요.\n\r";
 	constexpr char CREATE_ROOM_FAILED_OVERUSERS[] = "** [최소 인원: 2명, 최대 인원: 20명]\n\r";
-	constexpr char CREATE_ROOM_SUCCESS_MESSAGE[] = "** 대화방이 개설되었습니다.\n\r";
+	constexpr char CREATE_ROOM_SUCCESS_MESSAGE[] = "** <방 생성> 대화방이 개설되었습니다.\n\r";
 	constexpr char ROOM_ENTER_FAILED_MESSAGE[] = "** 존재하지 않는 방입니다. 올바른 방 번호를 입력해주세요.\n\r";
 	constexpr char ROOM_ENTER_FULLMESSAGE[] = "** 해당 방은 이미 최대 인원입니다. 다른 방을 이용해주세요.\n\r";
 	constexpr char ROOM_ENTER_NONAME_MESSAGE[] = "** 방의 이름이 존재하지 않습니다. 올바른 방 이름을 입력해주세요.\n\r";
@@ -61,6 +61,7 @@ namespace SearchMacro
 
 	///COMMAND
 	TCHAR SEARCH_GUIDE[] = L"<명령어 안내>";
+	TCHAR ROOM_CREATE[ ] = L"<방 생성>";
 }
 
 /// Login Packet

@@ -28,16 +28,10 @@ public:
 	UButton* RoomList_Button;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UButton* UserInfo_Button;
-
-	UPROPERTY( meta = ( BindWidget ) )
-	UButton* RoomInfo_Button;
-
-	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomCreate_Button;
 	
 	UPROPERTY( meta = ( BindWidget ) )
-	UButton* RoomEnter_Button;
+	UButton* SecretMessage_Button;
 
 public:
 	///秦寸 Widget 积己磊
@@ -56,19 +50,12 @@ private:
 	UFUNCTION()
 	void RequestRoomList();
 
-	/// 蜡历 沥焊 夸没
-	UFUNCTION()
-	void RequestUserInfo();
-
-	/// 规 沥焊 夸没
-	UFUNCTION()
-	void RequestRoomInfo();
-
 	/// 规 积己 夸没
 	UFUNCTION()
 	void RequestRoomCreate();
 
-	/// 规 涝厘 夸没
-	UFUNCTION()
-	void RequestRoomEnter();
+	/// 庇加富 夸没
+	UFUNCTION( )
+	void RequestSecretMessage( );
+
 };

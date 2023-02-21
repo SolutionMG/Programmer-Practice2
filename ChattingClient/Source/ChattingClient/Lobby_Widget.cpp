@@ -3,7 +3,7 @@
 
 #include "Lobby_Widget.h"
 #include "ServerManager.h"
-
+#include "ChattingGameMode.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -18,17 +18,11 @@ void ULobby_Widget::NativeConstruct()
 	if ( RoomList_Button )
 		RoomList_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestRoomList );
 
-	if ( UserInfo_Button )
-		UserInfo_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestUserInfo );
-
-	if( RoomInfo_Button )
-		RoomInfo_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestRoomInfo );
-
 	if ( RoomCreate_Button )
 		RoomCreate_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestRoomCreate );
 
-	if ( RoomEnter_Button )
-		RoomEnter_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestRoomEnter );
+	if ( SecretMessage_Button )
+		SecretMessage_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestSecretMessage );
 
 }
 
@@ -36,19 +30,6 @@ void ULobby_Widget::QuitGame()
 {
 	UKismetSystemLibrary::QuitGame( this, 0, EQuitPreference::Quit, false );
 
-}
-
-void ULobby_Widget::RequestUserInfo()
-{
-	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "RequestUserInfo server GetserverInstance Failed" ) );
-		return;
-	}
-
-	//FString command = CommandMessage::PLAYERINFO;
-	//server->SendPacket( command );
 }
 
 void ULobby_Widget::RequestUserList()
@@ -60,8 +41,7 @@ void ULobby_Widget::RequestUserList()
 		return;
 	}
 
-	//FString command = CommandMessage::USERLIST ;
-	//server->SendPacket( command );
+	server->SendPacket( "US" );
 }
 
 void ULobby_Widget::RequestRoomList()
@@ -73,45 +53,20 @@ void ULobby_Widget::RequestRoomList()
 		return;
 	}
 
-	//FString command = CommandMessage::ROOMLIST;
-	//server->SendPacket( command );
+	server->SendPacket( "LT" );
 }
 
-void ULobby_Widget::RequestRoomInfo()
-{
-	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "RequestRoomInfo server GetserverInstance Failed" ) );
-		return;
-	}
-
-	//FString command = CommandMessage::ROOMINFO;
-	//server->SendPacket( command );
-}
 
 void ULobby_Widget::RequestRoomCreate()
 {
-	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "RequestRoomCreate server GetserverInstance Failed" ) );
-		return;
-	}
-
-	//FString command = CommandMessage::ROOMCREATE;
-	//server->SendPacket( command );
+	//방 만들기 UI 생성
+	FString path = "/Game/UserInterfaces/RoomCreateWidgetBP";
+	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->CreateUIWidget( widget );
 }
 
-void ULobby_Widget::RequestRoomEnter()
+void ULobby_Widget::RequestSecretMessage( )
 {
-	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
-	{
-		UE_LOG( LogTemp, Warning, TEXT( "RequestRoomEnter server GetserverInstance Failed" ) );
-		return;
-	}
-
-	//FString command = CommandMessage::ROOMENTER;
-	//server->SendPacket( command );
 }
+
+
