@@ -27,4 +27,5 @@ namespace CommandMessage
 
 	constexpr char ROOMEXIT[] = "/X";			//방 나가기
 }
+
 #endif // !DEFINE_H
