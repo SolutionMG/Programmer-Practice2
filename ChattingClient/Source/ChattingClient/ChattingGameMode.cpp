@@ -39,3 +39,12 @@ void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClas
 		}
 	}
 }
+
+void AChattingGameMode::OffMenuWidget()
+{
+	if ( CurrentWidget != nullptr )
+	{
+		CurrentWidget->RemoveFromViewport();
+		CurrentWidget = nullptr;
+	}
+}

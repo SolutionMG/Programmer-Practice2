@@ -11,7 +11,8 @@ void UServerManager::Init()
 
 void UServerManager::Shutdown( )
 {
-	m_socket->Close( );
+	if ( m_socket != nullptr)
+		m_socket->Close();
 }
 
 bool UServerManager::ConnectToServer()

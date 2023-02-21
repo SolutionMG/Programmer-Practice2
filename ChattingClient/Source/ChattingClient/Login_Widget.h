@@ -33,9 +33,9 @@ public:
 
 public:
 	///해당 Widget 생성자
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
 	///LoginRequest Button 클릭 시 호출될 함수
-	UFUNCTION(BlueprintCallable)
-	bool LoginRequest();//
+	UFUNCTION()
+	void LoginRequest();//
 };

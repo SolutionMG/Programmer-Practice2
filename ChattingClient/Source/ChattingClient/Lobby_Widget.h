@@ -17,5 +17,5 @@ class CHATTINGCLIENT_API ULobby_Widget : public UUserWidget
 
 public:
 	///해당 Widget 생성자
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 };

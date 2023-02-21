@@ -18,6 +18,7 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "UMG Game" )
 	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass );
 
+	void OffMenuWidget();
 protected:
 	/** Called when the game Starts. */
 	virtual void BeginPlay( ) override;
