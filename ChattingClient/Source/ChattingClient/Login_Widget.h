@@ -30,12 +30,16 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* LoginRequest_Button;
-
+private:
+	UPROPERTY()
+	TSubclassOf<UUserWidget> FailedWidget;
+	
 public:
 	///해당 Widget 생성자
 	virtual void NativeConstruct() override;
 
 	///LoginRequest Button 클릭 시 호출될 함수
 	UFUNCTION()
-	void LoginRequest();//
+	void LoginRequest();
+
 };

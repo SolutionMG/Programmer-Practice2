@@ -32,7 +32,7 @@ void UMain_Widget::NativeConstruct()
 
 	if ( QuitButton != nullptr)
 	{
-		QuitButton->OnClicked.AddDynamic( this, &UMain_Widget::QuitGameReqeust );
+		QuitButton->OnClicked.AddDynamic( this, &UMain_Widget::QuitWidget );
 	}
 }
 
@@ -56,7 +56,7 @@ void UMain_Widget::AccessRequest()
 	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeMenuWidget( NextWidgetClass );
 }
 
-void UMain_Widget::QuitGameReqeust()
+void UMain_Widget::QuitWidget()
 {
 	UKismetSystemLibrary::QuitGame( this, 0, EQuitPreference::Quit, false );
 }

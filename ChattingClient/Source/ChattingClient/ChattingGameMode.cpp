@@ -40,11 +40,16 @@ void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClas
 	}
 }
 
-void AChattingGameMode::OffMenuWidget()
+void AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
-	if ( CurrentWidget != nullptr )
+	if ( NewWidgetClass != nullptr )
 	{
-		CurrentWidget->RemoveFromViewport();
-		CurrentWidget = nullptr;
+		UUserWidget* NewWidget;
+		NewWidget = CreateWidget<UUserWidget>( GetWorld(), NewWidgetClass );
+
+		if ( NewWidget != nullptr )
+		{
+			NewWidget->AddToViewport();
+		}
 	}
 }

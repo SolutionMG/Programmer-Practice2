@@ -15,10 +15,11 @@ class CHATTINGCLIENT_API AChattingGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION( BlueprintCallable, Category = "UMG Game" )
+	UFUNCTION( )
 	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass );
+	UFUNCTION()
+	void CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
 
-	void OffMenuWidget();
 protected:
 	/** Called when the game Starts. */
 	virtual void BeginPlay( ) override;

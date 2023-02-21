@@ -39,5 +39,5 @@ private:
 	void AccessRequest();
 	/// 게임 종료 함수
 	UFUNCTION(  )
-	void QuitGameReqeust();
+	void QuitWidget();
 };

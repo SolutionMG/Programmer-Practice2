@@ -139,12 +139,12 @@ bool UServerManager::ReceivePacket( )
 
 bool UServerManager::ProcessPacket( const FString& packet )
 {
-	UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);
+	///UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);	
 	if ( packet.Contains( FString(SearchMacro::SEARCH_SUCCESS_LOGON )))
 	{
+		/// 로그인 성공 -> 로비로 이동
 		FString path = "/Game/UserInterfaces/LobbyWidgetBP";
 		TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-		/// 로그인 성공 -> 로비로 이동
 		Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeMenuWidget( widget );
 	
 		return true;
@@ -152,6 +152,9 @@ bool UServerManager::ProcessPacket( const FString& packet )
 	else if( packet.Contains( SearchMacro::SEARCH_FAILED_LOGON ) )
 	{
 		/// 로그인 실패
+		FString path = "/Game/UserInterfaces/LoginFailedWidgetBP";
+		TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+		Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
 
 		return true;
 	}
