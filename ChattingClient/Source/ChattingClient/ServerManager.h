@@ -14,7 +14,8 @@
 #include "ServerManager.generated.h"
 
 #define SERVERIP "127.0.0.1"
-/**
+
+ /**
  * 
  */
 UCLASS()
@@ -48,6 +49,5 @@ public:
 	bool ReceivePacket();
 
 	bool ProcessPacket( const FString& packet );
-
-
 };
+

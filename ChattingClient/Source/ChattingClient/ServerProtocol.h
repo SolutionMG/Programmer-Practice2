@@ -1,7 +1,7 @@
-#ifndef SERVER_PROTOCOL_H
+ï»¿#ifndef SERVER_PROTOCOL_H
 #define SERVER_PROTOCOL_H
 
-/// °ª ÃÊ±âÈ­
+/// ê°’ ì´ˆê¸°í™”
 
 namespace InitializeServer
 {
@@ -28,38 +28,39 @@ namespace InitializeRoom
 namespace RenderMessageMacro
 {
 	///LOGIN
-	constexpr char ACCESS_MESSAGE[] = "** ¾È³çÇÏ¼¼¿ä. ÅØ½ºÆ® Ã¤ÆÃ ¼­¹ö Ver 0.1ÀÔ´Ï´Ù.\n\r";
-	constexpr char LOGON_REQUEST[] = "** ·Î±×ÀÎ ¸í·É¾î(LOGIN)À» »ç¿ëÇØÁÖ¼¼¿ä. ex)LOGIN  [ÀÌ¸§]\n\r";
-	constexpr char LOGON_FAILED[] = "** <·Î±×ÀÎ ½ÇÆÐ>¾ÆÀÌµð¸¦ ÀÌ¹Ì »ç¿ëÁßÀÔ´Ï´Ù. ´Ù¸¥ ¾ÆÀÌµð¸¦ »ç¿ëÇØÁÖ¼¼¿ä.\n\r";
-	constexpr char SUCCESS_LOGON_MESSAGE[] = "<·Î±×ÀÎ ¼º°ø> ¹Ý°©½À´Ï´Ù. ÅØ½ºÆ® Ã¤ÆÃ ¼­¹ö ver 0.1ÀÔ´Ï´Ù.\n\rÀÌ¿ëÁß ºÒÆíÇÏ½Å Á¡ÀÌ ÀÖÀ¸¸é ¾Æ·¡ ÀÌ¸ÞÀÏ·Î ¹®ÀÇ ¹Ù¶ø´Ï´Ù.\n\r°¨»çÇÕ´Ï´Ù.\n\r\n\remail:jieun.kim23@nm-neo.com\n\r";
+	constexpr char ACCESS_MESSAGE[] = "** ì•ˆë…•í•˜ì„¸ìš”. í…ìŠ¤íŠ¸ ì±„íŒ… ì„œë²„ Ver 0.1ìž…ë‹ˆë‹¤.\n\r";
+	constexpr char LOGON_REQUEST[] = "** ë¡œê·¸ì¸ ëª…ë ¹ì–´(LOGIN)ì„ ì‚¬ìš©í•´ì£¼ì„¸ìš”. ex)LOGIN  [ì´ë¦„]\n\r";
+	constexpr char LOGON_FAILED[] = "** <ë¡œê·¸ì¸ ì‹¤íŒ¨>ì•„ì´ë””ë¥¼ ì´ë¯¸ ì‚¬ìš©ì¤‘ìž…ë‹ˆë‹¤. ë‹¤ë¥¸ ì•„ì´ë””ë¥¼ ì‚¬ìš©í•´ì£¼ì„¸ìš”.\n\r";
+	constexpr char SUCCESS_LOGON_MESSAGE[] = "<ë¡œê·¸ì¸ ì„±ê³µ> ë°˜ê°‘ìŠµë‹ˆë‹¤. í…ìŠ¤íŠ¸ ì±„íŒ… ì„œë²„ ver 0.1ìž…ë‹ˆë‹¤.\n\rì´ìš©ì¤‘ ë¶ˆíŽ¸í•˜ì‹  ì ì´ ìžˆìœ¼ë©´ ì•„ëž˜ ì´ë©”ì¼ë¡œ ë¬¸ì˜ ë°”ëžë‹ˆë‹¤.\n\rê°ì‚¬í•©ë‹ˆë‹¤.\n\r\n\remail:jieun.kim23@nm-neo.com\n\r";
 
 	///LINE, COMMANDLINE
-	constexpr char ROOMINFO_LINE_MESSAGE[] = "-------------------------------´ëÈ­¹æ Á¤º¸-------------------------------\n\r";
+	constexpr char ROOMINFO_LINE_MESSAGE[] = "-------------------------------ëŒ€í™”ë°© ì •ë³´-------------------------------\n\r";
 	constexpr char DIVIDE_LINE_MESSAGE[] = "-------------------------------------------------------------------------\n\r";
 	constexpr char COMMAND_WAIT_MESSAGE[] = ">>";
-	constexpr char SELECT_COMMAND_MESSAGE[] = "¸í·É¾î ¾È³»(H) Á¾·á(X)\n\r";
-	constexpr char NOCOMMAND_MESSAGE[] = "µî·ÏµÇÁö ¾ÊÀº ¸í·É¾î ÀÔ´Ï´Ù.H¸¦ ´©¸£¸é ¸í·É¾î¸¦ È®ÀÎÇÏ½Ç ¼ö ÀÖ½À´Ï´Ù. \n\r";
+	constexpr char SELECT_COMMAND_MESSAGE[] = "ëª…ë ¹ì–´ ì•ˆë‚´(H) ì¢…ë£Œ(X)\n\r";
+	constexpr char NOCOMMAND_MESSAGE[] = "ë“±ë¡ë˜ì§€ ì•Šì€ ëª…ë ¹ì–´ ìž…ë‹ˆë‹¤.Hë¥¼ ëˆ„ë¥´ë©´ ëª…ë ¹ì–´ë¥¼ í™•ì¸í•˜ì‹¤ ìˆ˜ ìžˆìŠµë‹ˆë‹¤. \n\r";
 
 	///COMMAND
 	constexpr char GUIDE_MESSAGE[] =
-		"<¸í·É¾î ¾È³»>\n\r[H]				- ¸í·É¾î ¸ñ·Ï ¾È³»\n\r[US]				- Á¢¼Ó À¯Àú ¸ñ·Ï\n\r[LT]				- ´ëÈ­¹æ ¸ñ·Ï\n\r[O] [ÃÖ´ëÀÎ¿ø] [¹æÁ¦¸ñ]		- ´ëÈ­¹æ »ý¼º\n\r[J] [¹æ¹øÈ£]			- ´ëÈ­¹æ ÀÔÀå\n\r[PF] [À¯ÀúÀÌ¸§]			- ÀÌ¿ëÀÚ Á¤º¸ º¸±â\n\r[ST] [¹æ¹øÈ£]			- ´ëÈ­¹æ Á¤º¸ º¸±â\n\r[TO] [»ó´ë¹æID] [¸Þ½ÃÁö]	- ÂÊÁö º¸³»±â\n\r[X]				- Á¢¼ÓÁ¾·á\n\r";
-	constexpr char FAILED_COMMAND_MESSAGE[] = "** ¾ç½Ä¿¡ ¸Â´Â ¸Þ½ÃÁö¸¦ »ç¿ëÇØ ÁÖ¼¼¿ä.\n\r";
-	constexpr char CREATE_ROOM_FAILED_MESSAGE[] = "** ÀÌ¹Ì µ¿ÀÏÇÑ ÀÌ¸§ÀÇ ¹æÀÌ Á¸ÀçÇÕ´Ï´Ù. ´Ù¸¥ ÀÌ¸§À» »ç¿ëÇØÁÖ¼¼¿ä.\n\r";
-	constexpr char CREATE_ROOM_FAILED_OVERUSERS[] = "** [ÃÖ¼Ò ÀÎ¿ø: 2¸í, ÃÖ´ë ÀÎ¿ø: 20¸í]\n\r";
-	constexpr char CREATE_ROOM_SUCCESS_MESSAGE[] = "** ´ëÈ­¹æÀÌ °³¼³µÇ¾ú½À´Ï´Ù.\n\r";
-	constexpr char ROOM_ENTER_FAILED_MESSAGE[] = "** Á¸ÀçÇÏÁö ¾Ê´Â ¹æÀÔ´Ï´Ù. ¿Ã¹Ù¸¥ ¹æ ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.\n\r";
-	constexpr char ROOM_ENTER_FULLMESSAGE[] = "** ÇØ´ç ¹æÀº ÀÌ¹Ì ÃÖ´ë ÀÎ¿øÀÔ´Ï´Ù. ´Ù¸¥ ¹æÀ» ÀÌ¿ëÇØÁÖ¼¼¿ä.\n\r";
-	constexpr char ROOM_ENTER_NONAME_MESSAGE[] = "** ¹æÀÇ ÀÌ¸§ÀÌ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù. ¿Ã¹Ù¸¥ ¹æ ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä.\n\r";
-	constexpr char USERINFO_MESSAGE_FAILED[] = "Á¸ÀçÇÏÁö ¾Ê´Â À¯ÀúÀÔ´Ï´Ù.\n\r";
+		"<ëª…ë ¹ì–´ ì•ˆë‚´>\n\r[H]				- ëª…ë ¹ì–´ ëª©ë¡ ì•ˆë‚´\n\r[US]				- ì ‘ì† ìœ ì € ëª©ë¡\n\r[LT]				- ëŒ€í™”ë°© ëª©ë¡\n\r[O] [ìµœëŒ€ì¸ì›] [ë°©ì œëª©]		- ëŒ€í™”ë°© ìƒì„±\n\r[J] [ë°©ë²ˆí˜¸]			- ëŒ€í™”ë°© ìž…ìž¥\n\r[PF] [ìœ ì €ì´ë¦„]			- ì´ìš©ìž ì •ë³´ ë³´ê¸°\n\r[ST] [ë°©ë²ˆí˜¸]			- ëŒ€í™”ë°© ì •ë³´ ë³´ê¸°\n\r[TO] [ìƒëŒ€ë°©ID] [ë©”ì‹œì§€]	- ìª½ì§€ ë³´ë‚´ê¸°\n\r[X]				- ì ‘ì†ì¢…ë£Œ\n\r";
+	constexpr char FAILED_COMMAND_MESSAGE[] = "** ì–‘ì‹ì— ë§žëŠ” ë©”ì‹œì§€ë¥¼ ì‚¬ìš©í•´ ì£¼ì„¸ìš”.\n\r";
+	constexpr char CREATE_ROOM_FAILED_MESSAGE[] = "** ì´ë¯¸ ë™ì¼í•œ ì´ë¦„ì˜ ë°©ì´ ì¡´ìž¬í•©ë‹ˆë‹¤. ë‹¤ë¥¸ ì´ë¦„ì„ ì‚¬ìš©í•´ì£¼ì„¸ìš”.\n\r";
+	constexpr char CREATE_ROOM_FAILED_OVERUSERS[] = "** [ìµœì†Œ ì¸ì›: 2ëª…, ìµœëŒ€ ì¸ì›: 20ëª…]\n\r";
+	constexpr char CREATE_ROOM_SUCCESS_MESSAGE[] = "** ëŒ€í™”ë°©ì´ ê°œì„¤ë˜ì—ˆìŠµë‹ˆë‹¤.\n\r";
+	constexpr char ROOM_ENTER_FAILED_MESSAGE[] = "** ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ë°©ìž…ë‹ˆë‹¤. ì˜¬ë°”ë¥¸ ë°© ë²ˆí˜¸ë¥¼ ìž…ë ¥í•´ì£¼ì„¸ìš”.\n\r";
+	constexpr char ROOM_ENTER_FULLMESSAGE[] = "** í•´ë‹¹ ë°©ì€ ì´ë¯¸ ìµœëŒ€ ì¸ì›ìž…ë‹ˆë‹¤. ë‹¤ë¥¸ ë°©ì„ ì´ìš©í•´ì£¼ì„¸ìš”.\n\r";
+	constexpr char ROOM_ENTER_NONAME_MESSAGE[] = "** ë°©ì˜ ì´ë¦„ì´ ì¡´ìž¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ì˜¬ë°”ë¥¸ ë°© ì´ë¦„ì„ ìž…ë ¥í•´ì£¼ì„¸ìš”.\n\r";
+	constexpr char USERINFO_MESSAGE_FAILED[] = "ì¡´ìž¬í•˜ì§€ ì•ŠëŠ” ìœ ì €ìž…ë‹ˆë‹¤.\n\r";
 }
+
 namespace SearchMacro
 {
 	///LOGIN
-	constexpr char SEARCH_SUCCESS_LOGON[ ] = "<·Î±×ÀÎ ¼º°ø>";
-	constexpr char SEARCH_FAILED_LOGON[ ] = "<·Î±×ÀÎ ½ÇÆÐ>";
+	TCHAR SEARCH_SUCCESS_LOGON[] = L"<ë¡œê·¸ì¸ ì„±ê³µ>";
+	TCHAR SEARCH_FAILED_LOGON[] = L"<ë¡œê·¸ì¸ ì‹¤íŒ¨>";
 
 	///COMMAND
-	constexpr char SEARCH_GUIDE[ ] = "<¸í·É¾î ¾È³»>";
+	TCHAR SEARCH_GUIDE[] = L"<ëª…ë ¹ì–´ ì•ˆë‚´>";
 }
 
 /// Login Packet

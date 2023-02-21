@@ -34,8 +34,6 @@ public:
 	virtual void NativeConstruct() override;
 
 private:
-
-
 	///Login Button 클릭 시 호출될 함수
 	UFUNCTION(  )
 	void AccessRequest();

@@ -13,7 +13,6 @@
 UMain_Widget::UMain_Widget( const FObjectInitializer& ObjectInitializer )
 	: Super( ObjectInitializer )
 {
-
 	static ConstructorHelpers::FClassFinder<UUserWidget> NextUI( TEXT( "/Game/UserInterfaces/LoginWidgetBP" ) );
 
 	if ( NextUI.Succeeded() )
@@ -50,6 +49,7 @@ void UMain_Widget::AccessRequest()
 	bool returnValue = server->ConnectToServer();
 	if (!returnValue)
 	{
+		UE_LOG( LogTemp, Warning, TEXT( "AccessRequest ConnectToServer Failed" ) );
 		return;
 	}
 

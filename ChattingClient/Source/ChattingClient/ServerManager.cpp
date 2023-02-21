@@ -3,6 +3,9 @@
 
 #include "ServerManager.h"
 #include "ServerProtocol.h"
+#include "ChattingGameMode.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+
 
 void UServerManager::Init()
 {
@@ -31,6 +34,10 @@ bool UServerManager::ConnectToServer()
 	address->SetPort( InitializeServer::SERVERPORT );
 
 	bool connect = m_socket->Connect( *address );
+
+	if ( !connect )
+		return false;
+
 	m_socket->SetNonBlocking( true );
 	m_socket->SetNoDelay( true );
 
@@ -132,9 +139,20 @@ bool UServerManager::ReceivePacket( )
 
 bool UServerManager::ProcessPacket( const FString& packet )
 {
-	//	UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);
-	if ( packet.Contains(SearchMacro::SEARCH_SUCCESS_LOGON) )
+	UE_LOG( LogTemp, Warning, TEXT("%s"), *packet);
+	if ( packet.Contains( FString(SearchMacro::SEARCH_SUCCESS_LOGON )))
 	{
+		FString path = "/Game/UserInterfaces/LobbyWidgetBP";
+		TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+		/// 로그인 성공 -> 로비로 이동
+		Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeMenuWidget( widget );
+	
+		return true;
+	}
+	else if( packet.Contains( SearchMacro::SEARCH_FAILED_LOGON ) )
+	{
+		/// 로그인 실패
+
 		return true;
 	}
 
