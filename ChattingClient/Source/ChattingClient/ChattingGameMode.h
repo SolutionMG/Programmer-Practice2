@@ -32,7 +32,7 @@ public:
 	UFUNCTION( )
 	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass);
 	UFUNCTION()
-	void CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
+	UUserWidget* CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
 
 	UFUNCTION( BlueprintCallable )
 	void SetisChattingRoom( const bool& isRoom );

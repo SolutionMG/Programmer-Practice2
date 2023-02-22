@@ -4,27 +4,37 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "LoginFailed_Widget.generated.h"
+#include "ShowUserList_Widget.generated.h"
 
 class UButton;
-class UTextBlock;
+class UScrollBox;
+
 /**
  * 
  */
+
+
 UCLASS()
-class CHATTINGCLIENT_API ULoginFailed_Widget : public UUserWidget
+class CHATTINGCLIENT_API UShowUserList_Widget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* QuitUserList_Button;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UButton* LoginFailed_OffButton;
-
-	UPROPERTY( meta = ( BindWidget ) )
-	UTextBlock* LoginFailed_TextBox;
+	UScrollBox* List_ScrollBox;
 
 public:
+
 	///해당 Widget 생성자 역할 함수
 	virtual void NativeConstruct() override;
 
+	//유저 목록 추가
+	UFUNCTION()
+	bool AddUserListWidget( const FString& Message );
+
+private:
+	UFUNCTION()
+	void QuitUI();
 };

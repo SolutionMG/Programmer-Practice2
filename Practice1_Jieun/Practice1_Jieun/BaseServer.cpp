@@ -576,10 +576,13 @@ bool BaseServer::RequestUserList( const SOCKET& socket )
     }
     m_playersLock.unlock();
 
-    player.SendPacket( userNameList.c_str() );
-    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
-    player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+    std::string parse = userNameList;
+    parse += RenderMessageMacro::DIVIDE_LINE_MESSAGE;
+    parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+    parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+
+    player.SendPacket( parse);
+
     return true;
 }
 
@@ -666,9 +669,12 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
                 sendMessage += "\n\r";
                 m_playersLock.unlock();
             }
-            player.SendPacket(RenderMessageMacro::ROOMINFO_LINE_MESSAGE);
-            player.SendPacket(sendMessage.c_str());
-            player.SendPacket(RenderMessageMacro::DIVIDE_LINE_MESSAGE);
+
+            std::string parse = RenderMessageMacro::ROOMINFO_LINE_MESSAGE;
+            parse += sendMessage;
+            parse += RenderMessageMacro::ROOMINFO_LINE_MESSAGE;
+
+            player.SendPacket( parse );
             
             break;
         }
@@ -897,8 +903,9 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
 
     int maxUser = atoi(max.c_str());
 
-    /// 인원 초과
-    if ( maxUser < InitializeRoom::MIN_ROOMPLAYER || maxUser > InitializeRoom::MAX_ROOMPLAYER )
+    
+    /// 인원 초과 혹은 양식에 맞지 않음.
+    if (  maxUser < InitializeRoom::MIN_ROOMPLAYER || maxUser > InitializeRoom::MAX_ROOMPLAYER )
     {
         player.SendPacket(RenderMessageMacro::CREATE_ROOM_FAILED_OVERUSERS );
         player.SendPacket(RenderMessageMacro::FAILED_COMMAND_MESSAGE);
@@ -1071,6 +1078,9 @@ bool BaseServer::RequestRoomList( const SOCKET& socket )
     size_t roomSize = m_chattingRooms.size();
     m_chattRoomLock.unlock();
 
+    player.SendPacket(  "--------------------------------방 목록--------------------------------\n\r" );
+
+
     if ( roomSize == 0 )
     {
         /// 방이 없음.
@@ -1107,7 +1117,6 @@ bool BaseServer::RequestRoomList( const SOCKET& socket )
     }
     m_chattRoomLock.unlock();
 
-    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
     player.SendPacket( roomsInfo.c_str() );
     player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
     player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );

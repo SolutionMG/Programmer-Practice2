@@ -5,6 +5,7 @@
 #include "ServerManager.h"
 #include "ChattingGameMode.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Runtime/UMG/Public/Components/Button.h"
 
 
 void ULobby_Widget::NativeConstruct()
@@ -35,7 +36,7 @@ void ULobby_Widget::QuitGame()
 void ULobby_Widget::RequestUserList()
 {
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
+	if ( server == nullptr )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "RequestUserList server GetserverInstance Failed" ) );
 		return;
@@ -47,7 +48,7 @@ void ULobby_Widget::RequestUserList()
 void ULobby_Widget::RequestRoomList()
 {
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
+	if ( server == nullptr )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "RequestRoomList server GetserverInstance Failed" ) );
 		return;

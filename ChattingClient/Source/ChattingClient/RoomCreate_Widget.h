@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
-#include "Runtime/UMG/Public/Components/Button.h"
-#include "Runtime/UMG/Public/Components/EditableTextBox.h"
-
 #include "RoomCreate_Widget.generated.h"
+
+class UButton;
+class UEditableTextBox;
 
 /**
  * 

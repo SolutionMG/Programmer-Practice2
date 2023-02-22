@@ -23,7 +23,7 @@ const bool& AChattingGameMode::GetisChattingRoom( )
 void AChattingGameMode::Tick( float DeletaSecond )
 {
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == NULL )
+	if ( server == nullptr )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "AChattingGameMode::Tick GetserverInstance Failed" ) );
 		return;
@@ -50,7 +50,7 @@ void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClas
 	}
 }
 
-void AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
+UUserWidget* AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
 	if ( NewWidgetClass != nullptr )
 	{
@@ -60,8 +60,10 @@ void AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass 
 		if ( NewWidget != nullptr )
 		{
 			NewWidget->AddToViewport();
+			return NewWidget;
 		}
 	}
+	return nullptr;
 }
 
 void AChattingGameMode::SetisChattingRoom( const bool& isRoom )

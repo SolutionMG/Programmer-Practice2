@@ -4,6 +4,8 @@
 #include "ChattingRoom_Widget.h"
 #include "ServerManager.h"
 #include "Runtime/UMG/Public/Components/TextBlock.h"
+#include "Runtime/UMG/Public/Components/EditableTextBox.h"
+#include "Runtime/UMG/Public/Components/Scrollbox.h"
 
 void UChattingRoom_Widget::NativeConstruct( )
 {
@@ -23,7 +25,7 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 			return;
 
 		UServerManager* server = Cast<UServerManager>( GetGameInstance( ) );
-		if ( server == NULL )
+		if ( server == nullptr )
 		{
 			UE_LOG( LogTemp, Warning, TEXT( "LoginRequest server->GetInstance Failed" ) );
 			return;

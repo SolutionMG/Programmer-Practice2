@@ -5,6 +5,7 @@
 #include "ServerManager.h"
 #include "ChattingGameMode.h"
 #include "Login_Widget.h"
+#include "Runtime/UMG/Public/Components/Button.h"
 
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
@@ -40,7 +41,7 @@ void UMain_Widget::NativeConstruct()
 void UMain_Widget::AccessRequest()
 {
 	UServerManager* server = Cast<UServerManager>(GetGameInstance());
-	if (server == NULL)
+	if (server == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("LoginRequest GetserverInstance Failed"));
 		return;

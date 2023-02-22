@@ -4,6 +4,9 @@
 #include "RoomCreate_Widget.h"
 #include "ServerManager.h"
 
+#include "Runtime/UMG/Public/Components/Button.h"
+#include "Runtime/UMG/Public/Components/EditableTextBox.h"
+
 void URoomCreate_Widget::NativeConstruct( )
 {
 	if ( RoomCreate_Button != nullptr )
@@ -15,7 +18,7 @@ void URoomCreate_Widget::NativeConstruct( )
 void URoomCreate_Widget::RequestCreateRoom( )
 {
 	UServerManager* server = Cast<UServerManager>( GetGameInstance( ) );
-	if ( server == NULL )
+	if ( server == nullptr )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "RequestCreateRoom server GetserverInstance Failed" ) );
 		return;
@@ -39,4 +42,6 @@ void URoomCreate_Widget::RequestCreateRoom( )
 	message += " ";
 	message += RoomName_TextBox->GetText( ).ToString( );
 	server->SendPacket( message );
+
+	this->RemoveFromParent();
 }

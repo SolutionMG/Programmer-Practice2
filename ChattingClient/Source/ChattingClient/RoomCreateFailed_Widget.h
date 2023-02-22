@@ -4,27 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "LoginFailed_Widget.generated.h"
+#include "RoomCreateFailed_Widget.generated.h"
 
-class UButton;
-class UTextBlock;
 /**
  * 
  */
+
+class UButton;
+
 UCLASS()
-class CHATTINGCLIENT_API ULoginFailed_Widget : public UUserWidget
+class CHATTINGCLIENT_API URoomCreateFailed_Widget : public UUserWidget
 {
 	GENERATED_BODY()
+	
 public:
-
 	UPROPERTY( meta = ( BindWidget ) )
-	UButton* LoginFailed_OffButton;
-
-	UPROPERTY( meta = ( BindWidget ) )
-	UTextBlock* LoginFailed_TextBox;
+	UButton* RoomCreateFailed_Button;
 
 public:
-	///해당 Widget 생성자 역할 함수
+	///해당 Widget 생성자
 	virtual void NativeConstruct() override;
 
+private:
+	void QuitUI();
 };

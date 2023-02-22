@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 
-#include "Runtime/UMG/Public/Components/EditableTextBox.h"
-#include "Runtime/UMG/Public/Components/Scrollbox.h"
-
 #include "ChattingRoom_Widget.generated.h"
+
+class UScrollBox;
+class UEditableTextBox;
 
 /**
  * 
@@ -32,7 +32,6 @@ public:
 	//채팅로그 추가
 	UFUNCTION( )
 	bool AddChatLogWidget( const FString& Message );
-public:
 
 private:
 	UFUNCTION( )

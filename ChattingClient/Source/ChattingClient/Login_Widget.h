@@ -2,11 +2,6 @@
 
 #pragma once
 
-#include "Runtime/UMG/Public/Components/Image.h"
-#include "Runtime/UMG/Public/Components/Button.h"
-#include "Runtime/UMG/Public/Components/TextBlock.h"
-#include "Runtime/UMG/Public/Components/EditableTextBox.h"
-
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Login_Widget.generated.h"
@@ -14,6 +9,12 @@
 /**
  * 
  */
+
+class UTextBlock;
+class UEditableTextBox;
+class UImage;
+class UButton;
+
 UCLASS()
 class CHATTINGCLIENT_API ULogin_Widget : public UUserWidget
 {

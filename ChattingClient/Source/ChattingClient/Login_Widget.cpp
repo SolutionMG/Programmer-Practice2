@@ -5,6 +5,11 @@
 #include "ServerManager.h"
 #include "LoginFailed_Widget.h"
 
+#include "Runtime/UMG/Public/Components/Image.h"
+#include "Runtime/UMG/Public/Components/Button.h"
+#include "Runtime/UMG/Public/Components/TextBlock.h"
+#include "Runtime/UMG/Public/Components/EditableTextBox.h"
+
 void ULogin_Widget::NativeConstruct()
 {
 	if ( LoginRequest_Button != nullptr )
@@ -28,7 +33,7 @@ void ULogin_Widget::LoginRequest()
 		return;
 
 	UServerManager* server = Cast<UServerManager>(GetGameInstance());
-	if (server == NULL)
+	if (server == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("LoginRequest server->GetInstance Failed"));
 		return;
