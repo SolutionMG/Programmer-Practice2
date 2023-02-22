@@ -49,6 +49,12 @@ void ClientInfo::EndLock()
 	m_clientLock.unlock();
 }
 
+std::mutex& ClientInfo::GetLock()
+{
+	// TODO: 여기에 return 문을 삽입합니다.
+	return m_clientLock;
+}
+
 const SOCKET ClientInfo::GetSocket()
 {
 	return m_socket;

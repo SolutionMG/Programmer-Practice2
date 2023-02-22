@@ -75,6 +75,8 @@ private:
 	bool RequestUserInfo( const SOCKET& socket);
 	bool RequestNote( const SOCKET& socket);
 
+	bool RequestRoomExit( const SOCKET& socket );
+
 	/// 로그온 진행 프로세스
 	void LogOnCommandProcess();
 

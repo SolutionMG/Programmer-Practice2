@@ -46,6 +46,7 @@ public:
 	///Lock
 	void StartLock();
 	void EndLock();
+	std::mutex& GetLock();
 };
 #endif // !CLIENT_H
 
