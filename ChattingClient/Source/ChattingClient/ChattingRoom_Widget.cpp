@@ -61,7 +61,7 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 void UChattingRoom_Widget::QuitUI()
 {
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == nullptr )
+	if ( !server )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "LoginRequest server->GetInstance Failed" ) );
 		return;

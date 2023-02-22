@@ -745,31 +745,44 @@ bool BaseServer::RequestNote( const SOCKET& socket )
         m_playersLock.unlock();
     }
     
+    std::string parse = "";
     if ( isExistPlayer == false )
     {
-        player.SendPacket("존재하지 않는 유저입니다.\n\r");
-        player.SendPacket(RenderMessageMacro::SELECT_COMMAND_MESSAGE);
-        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += "<귓속말> 존재하지 않는 유저입니다.\n\r";
+        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+
+        player.SendPacket( parse );
+
     }
     else
     {
         if ( name == player.GetName() )
         {
-            player.SendPacket("본인에게는 귓속말을 할 수 없습니다.\n\r");
-            player.SendPacket(RenderMessageMacro::SELECT_COMMAND_MESSAGE);
-            player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+            parse += "<귓속말> 본인에게는 귓속말을 할 수 없습니다.\n\r";
+            parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+            parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+
+            player.SendPacket( parse );
         }
         else
         {
-            name += " ==> ";
-            name += note;
-            name += "\n\r";
-            targetPlayerInfo->SendPacket( name.c_str() );
+            std::string fromName;
+            {
+                std::lock_guard<std::mutex> guard( player.GetLock() );
+                fromName = player.GetName();
+            }
 
-            name += "귓속말을 보냈습니다.\n\r";
-
-            player.SendPacket( name.c_str() );
-            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+            parse += "<귓속말> ";
+            parse += "[ ";
+            parse += fromName;
+            parse += " ==> ";
+            parse += name;
+            parse += " ] ";
+            parse += note;
+            parse += "\n\r";
+            parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+            targetPlayerInfo->SendPacket( parse.c_str() );
         }
 
     }

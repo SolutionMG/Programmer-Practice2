@@ -15,15 +15,13 @@ class CHATTINGCLIENT_API AChattingGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
+	/** The Widget class we will use as our menu when the game starts. */
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "UMG Game" )
 	TSubclassOf<UUserWidget> startingWidgetClass;
-
-
 
 private:
 	UPROPERTY( )
 	bool m_isChattingRoom;
-	/** The Widget class we will use as our menu when the game starts. */
 
 		/** The widget instance that we are using as our menu. */
 	UPROPERTY( )

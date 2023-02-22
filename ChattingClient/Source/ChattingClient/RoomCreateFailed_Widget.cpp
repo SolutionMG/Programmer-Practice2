@@ -7,7 +7,7 @@
 
 void URoomCreateFailed_Widget::NativeConstruct()
 {
-	if ( RoomCreateFailed_Button != nullptr )
+	if ( RoomCreateFailed_Button )
 	{
 		RoomCreateFailed_Button->OnClicked.AddDynamic( this, &URoomCreateFailed_Widget::QuitUI );
 	}

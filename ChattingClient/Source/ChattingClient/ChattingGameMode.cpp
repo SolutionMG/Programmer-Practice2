@@ -22,8 +22,10 @@ const bool& AChattingGameMode::GetisChattingRoom( )
 }
 void AChattingGameMode::Tick( float DeletaSecond )
 {
+	AGameMode::Tick( DeletaSecond );
+
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
-	if ( server == nullptr )
+	if ( !server )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "AChattingGameMode::Tick GetserverInstance Failed" ) );
 		return;
@@ -33,37 +35,33 @@ void AChattingGameMode::Tick( float DeletaSecond )
 }
 void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
-	if ( CurrentWidget != nullptr )
+	if ( CurrentWidget )
 	{
-		CurrentWidget->RemoveFromViewport( );
+		CurrentWidget->RemoveFromViewport();
 		CurrentWidget = nullptr;
 	}
 
-	if ( NewWidgetClass != nullptr )
-	{
-		CurrentWidget = CreateWidget<UUserWidget>( GetWorld( ), NewWidgetClass );
+	if ( !NewWidgetClass )
+		return;
+	CurrentWidget = CreateWidget<UUserWidget>( GetWorld( ), NewWidgetClass );
 
-		if ( CurrentWidget != nullptr )
-		{
-			CurrentWidget->AddToViewport( );
-		}
-	}
+	if ( CurrentWidget != nullptr )
+		CurrentWidget->AddToViewport( );
 }
 
 UUserWidget* AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
-	if ( NewWidgetClass != nullptr )
-	{
-		UUserWidget* NewWidget;
-		NewWidget = CreateWidget<UUserWidget>( GetWorld(), NewWidgetClass );
+	if ( !NewWidgetClass )
+		return nullptr;
+	
+	UUserWidget* NewWidget;
+	NewWidget = CreateWidget<UUserWidget>( GetWorld(), NewWidgetClass );
 
-		if ( NewWidget != nullptr )
-		{
-			NewWidget->AddToViewport();
-			return NewWidget;
-		}
-	}
-	return nullptr;
+	if ( !NewWidget )
+		return nullptr;
+
+	NewWidget->AddToViewport();
+	return NewWidget;
 }
 
 void AChattingGameMode::SetisChattingRoom( const bool& isRoom )

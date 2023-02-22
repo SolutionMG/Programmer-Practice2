@@ -26,12 +26,12 @@ UMain_Widget::UMain_Widget( const FObjectInitializer& ObjectInitializer )
 void UMain_Widget::NativeConstruct()
 {
 
-	if ( LoginButton != nullptr)
+	if ( LoginButton )
 	{
 		LoginButton->OnClicked.AddDynamic( this, &UMain_Widget::AccessRequest );
 	}
 
-	if ( QuitButton != nullptr)
+	if ( QuitButton )
 	{
 		QuitButton->OnClicked.AddDynamic( this, &UMain_Widget::QuitWidget );
 	}

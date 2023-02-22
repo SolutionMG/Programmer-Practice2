@@ -12,7 +12,7 @@
 
 void ULogin_Widget::NativeConstruct()
 {
-	if ( LoginRequest_Button != nullptr )
+	if ( LoginRequest_Button )
 	{
 		LoginRequest_Button->OnClicked.AddDynamic( this, &ULogin_Widget::LoginRequest );
 	}

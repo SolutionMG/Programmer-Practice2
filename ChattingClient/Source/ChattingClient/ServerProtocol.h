@@ -65,6 +65,8 @@ namespace SearchMacro
 
 	TCHAR USER_LIST[] = L"유저 목록";
 	TCHAR ROOM_LIST[] = L"방 목록";
+
+	TCHAR SECRET_MESSAGE[] = L"<귓속말>";
 }
 
 /// Login Packet

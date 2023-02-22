@@ -7,6 +7,7 @@
 #include "ChattingRoom_Widget.h"
 #include "ShowUserList_Widget.h"
 #include "ShowRoomList_Widget.h"
+#include "ReceiveSecretMessage.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 
@@ -182,7 +183,7 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			FString path = "/Game/UserInterfaces/ChattingRoomWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
 			gameMode->ChangeMenuWidget( widget );
-			gameMode->SetisChattingRoom( true );
+			gameMode->SetisChattingRoom( true ); 
 		}
 		else if ( packet.Contains( SearchMacro::ROOM_CREATE_FAILED ) )
 		{
@@ -211,6 +212,17 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			if ( UI != nullptr )
 				Cast<UShowRoomList_Widget>( UI )->AddRoomListWidget( packet );
 		}
+
+		else if ( packet.Contains(SearchMacro::SECRET_MESSAGE) )
+		{
+			FString path = "/Game/UserInterfaces/ReceiveSecretMessageWidgetBP";
+			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+			UUserWidget* UI = gameMode->CreateUIWidget( widget );
+
+			if ( UI != nullptr )
+				Cast<UReceiveSecretMessage>( UI )->SetMessage( packet );
+		}
+
 	}
 	return false;
 }

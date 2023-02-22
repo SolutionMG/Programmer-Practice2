@@ -68,6 +68,10 @@ void ULobby_Widget::RequestRoomCreate()
 
 void ULobby_Widget::RequestSecretMessage( )
 {
+	//방 만들기 UI 생성
+	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
+	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
 }
 
 

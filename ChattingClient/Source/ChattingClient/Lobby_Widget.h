@@ -8,6 +8,8 @@
 #include "Lobby_Widget.generated.h"
 
 class UButton;
+class UScrollBox;
+;
 /**
  * 
  */
@@ -31,6 +33,7 @@ public:
 	
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* SecretMessage_Button;
+
 
 public:
 	///해당 Widget 생성자
