@@ -14,8 +14,8 @@ void UChattingRoom_Widget::NativeConstruct( )
 {
 	if ( Message_TextBox )
 		Message_TextBox->OnTextCommitted.AddDynamic( this, &UChattingRoom_Widget::SendChatting );
-	if ( ChattingRoomQuit_Button )
-		ChattingRoomQuit_Button->OnClicked.AddDynamic( this, &UChattingRoom_Widget::QuitUI );
+	//if ( ChattingRoomQuit_Button )
+	//	ChattingRoomQuit_Button->OnClicked.AddDynamic( this, &UChattingRoom_Widget::QuitUI );
 }
 
 void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type CommitMethod )
@@ -41,8 +41,22 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 			UE_LOG( LogTemp, Warning, TEXT( "LoginRequest server->SendPacket Failed" ) );
 			return;
 		}
+
+		TArray<FString> parseArray;
+
+		FString parse = Text.ToString();
+		const TCHAR* deletes[] = { TEXT( "\n\r" ), TEXT("\n")};
+		parse.ParseIntoArray( parseArray, deletes, 1 );
+
+		FString parse2;
+		for ( const auto& m : parseArray )
+		{
+			if ( m != "\n\r" && m != ">>" && m!="\n" )
+				parse2 += m;
+		}
+
 		UTextBlock* NewTextBlock = NewObject<UTextBlock>( );
-		NewTextBlock->SetText( Text);
+		NewTextBlock->SetText( FText::FromString( parse2) );
 		NewTextBlock->SetColorAndOpacity( FLinearColor::Black );
 		ChatLog->AddChild( NewTextBlock );
 		ChatLog->ScrollToEnd( );
@@ -76,14 +90,6 @@ void UChattingRoom_Widget::QuitUI()
 	AChattingGameMode* gameMode = Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) );
 	if ( !gameMode )
 		return;
-
-	static ConstructorHelpers::FClassFinder<UUserWidget> NextUI( TEXT( "/Game/UserInterfaces/LobbyWidgetBP" ) );
-	TSubclassOf<UUserWidget> NextWidgetClass;
-	if ( NextUI.Succeeded() )
-	{
-		NextWidgetClass = NextUI.Class;
-		gameMode->ChangeMenuWidget( NextWidgetClass );
-	}
 
 	this->RemoveFromParent();
 }

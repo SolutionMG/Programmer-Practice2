@@ -40,7 +40,7 @@ private:
 	UFUNCTION( )
 	void SendChatting( const FText& Text, ETextCommit::Type CommitMethod );
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void QuitUI();
 
 };

@@ -456,10 +456,13 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
     std::string_view message = { player.GetChattingLog().cbegin(), player.GetChattingLog().cend() };
     player.EndLock();
 
+    std::string parse = "";
+
     if (message.length() < 4)
     {
-        player.SendPacket(RenderMessageMacro::FAILED_COMMAND_MESSAGE);
-        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::FAILED_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
 
@@ -488,13 +491,16 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
     }
     m_playersLock.unlock();
 
+
     if ( flag == true )
     {
+        parse += "<유저 정보>\n\r";
+
         m_playersLock.lock();
         auto& target = m_players[userSocket];
         m_playersLock.unlock();
 
-        std::string userInfo = { userName.cbegin(), userName.cend()};
+        parse += { userName.cbegin(), userName.cend()};
 
         switch ( target.GetState() )
         {
@@ -504,15 +510,15 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
         break;
         case EClientState::LOGON:
         {
-            userInfo += "님은 로비에 있습니다.\n\r";
-            player.SendPacket( userInfo.c_str());
-            player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+            parse += "님은 로비에 있습니다.\n\r";
+            parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+            parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+            player.SendPacket( parse.c_str());
         }
         break;
         case EClientState::ROOM:
         {
-            userInfo += "님은";
+            parse += "님은";
 
             target.StartLock();
             int roomNumber = target.GetRoomNumber();
@@ -520,11 +526,10 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
 
             char roomIndex[8]; 
             _itoa_s( roomNumber, roomIndex, 10 );
-            userInfo += roomIndex;
-            userInfo += "번 방에 있습니다.\n\r";
-
-            player.SendPacket( userInfo.c_str() );
-            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+            parse += roomIndex;
+            parse += "번 방에 있습니다.\n\r";
+            parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+            player.SendPacket( parse.c_str() );
         }
         break;
         case EClientState::EXIT:
@@ -541,9 +546,10 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
     }
     else
     {
-        player.SendPacket( RenderMessageMacro::USERINFO_MESSAGE_FAILED );
-        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::USERINFO_MESSAGE_FAILED;
+        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
     }
 
     return true;
@@ -593,36 +599,38 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
     m_playersLock.unlock();
 
     std::string_view message = { player.GetChattingLog().cbegin(), player.GetChattingLog().cend() };
-
+    std::string parse = "";
     if (message.length() < 4)
     {
-        player.SendPacket( RenderMessageMacro::NOCOMMAND_MESSAGE );
-        player.SendPacket(RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::NOCOMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
 
     if ( message[2] != ' ' )
     {
-        player.SendPacket( RenderMessageMacro::NOCOMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::NOCOMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
-
-
 
     std::string roomIndex = { message.cbegin() + 3, message.cend() };
     int isNumber = message[ 3 ] - '0';
 
     if (isNumber < 0 || isNumber > 9)
     {
-        player.SendPacket( RenderMessageMacro::FAILED_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += "<방 정보 불러오기 실패> \n\r";
+        parse += RenderMessageMacro::FAILED_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
 
     int index = atoi( roomIndex.c_str() );
     std::string sendMessage = "[";
-
+    parse += "<방 정보>\n\r";
 
     ///현재 시간
     ///입장 시간 기입
@@ -670,9 +678,9 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
                 m_playersLock.unlock();
             }
 
-            std::string parse = RenderMessageMacro::ROOMINFO_LINE_MESSAGE;
-            parse += sendMessage;
             parse += RenderMessageMacro::ROOMINFO_LINE_MESSAGE;
+            parse += sendMessage;
+            parse += RenderMessageMacro::DIVIDE_LINE_MESSAGE;
 
             player.SendPacket( parse );
             
@@ -683,7 +691,7 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
 
     if (flag == false)
     {
-        player.SendPacket("존재하지 않는 방입니다.\n\r");
+        player.SendPacket("<방 정보 불러오기 실패> 존재하지 않는 방입니다.\n\r");
     }
 
     player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
@@ -988,10 +996,13 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
     std::string message = { player.GetChattingLog().cbegin(), player.GetChattingLog().cend() };
     std::string userName = player.GetName();
 
+    std::string parse = "";
+
     if (message[1] != ' ')
     {
-        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
 
@@ -1005,9 +1016,10 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
 
     if (iter == enditer)
     {
-        player.SendPacket( RenderMessageMacro::ROOM_ENTER_FAILED_MESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::ROOM_ENTER_FAILED_MESSAGE;
+        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
 
@@ -1024,9 +1036,10 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
     ///최대 인원 제한
     if (total == max)
     {
-        player.SendPacket( RenderMessageMacro::ROOM_ENTER_FAILED_MESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += RenderMessageMacro::ROOM_ENTER_FULLMESSAGE;
+        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return false;
     }
 
@@ -1068,11 +1081,14 @@ bool BaseServer::RequestRoomEnter( const SOCKET& socket )
 
     player.SendPacket( "** 방에서 나가기 : /X\n\r" );
 
+    parse += "<입장>";
+    parse += enterMessage;
+    parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+
     m_playersLock.lock();
     for ( const auto& user : roomUserIndex )
     {
-        m_players[user].SendPacket( enterMessage.c_str() );
-        m_players[user].SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        m_players[user].SendPacket( parse.c_str() );
     }
     m_playersLock.unlock();
 

@@ -25,6 +25,14 @@ void ULobby_Widget::NativeConstruct()
 	if ( SecretMessage_Button )
 		SecretMessage_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestSecretMessage );
 
+	if( RoomEnter_Button )
+		RoomEnter_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestRoomEnter );
+
+	if ( RoomInfo_Button )
+		RoomInfo_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestRoomInfo );
+
+	if ( UserInfo_Button )
+		UserInfo_Button->OnClicked.AddDynamic( this, &ULobby_Widget::RequestUserInfo );
 }
 
 void ULobby_Widget::QuitGame()
@@ -70,6 +78,30 @@ void ULobby_Widget::RequestSecretMessage( )
 {
 	//방 만들기 UI 생성
 	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
+	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+}
+
+void ULobby_Widget::RequestRoomEnter()
+{
+	///방 입장 번호 입력 UI
+	FString path = "/Game/UserInterfaces/RoomEnterWidgetBP";
+	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+}
+
+void ULobby_Widget::RequestRoomInfo()
+{
+	///방 정보 UI
+	FString path = "/Game/UserInterfaces/RoomInfoInputWidgetBP";
+	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+}
+
+void ULobby_Widget::RequestUserInfo()
+{
+	///유저 정보 UI
+	FString path = "/Game/UserInterfaces/UserInfoInputWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
 }

@@ -34,6 +34,14 @@ public:
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* SecretMessage_Button;
 
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* UserInfo_Button;
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* RoomInfo_Button;
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* RoomEnter_Button;
 
 public:
 	///해당 Widget 생성자
@@ -60,4 +68,12 @@ private:
 	UFUNCTION( )
 	void RequestSecretMessage( );
 
+	UFUNCTION()
+	void RequestRoomEnter();
+
+	UFUNCTION()
+	void RequestRoomInfo();
+
+	UFUNCTION()
+	void RequestUserInfo();
 };
