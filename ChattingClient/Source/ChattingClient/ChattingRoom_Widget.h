@@ -7,9 +7,9 @@
 
 #include "ChattingRoom_Widget.generated.h"
 
+class UButton;
 class UScrollBox;
 class UEditableTextBox;
-
 /**
  * 
  */
@@ -25,6 +25,9 @@ public:
 	UPROPERTY( meta = ( BindWidget ) )
 	UEditableTextBox* Message_TextBox;
 
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* ChattingRoomQuit_Button;
+
 public:
 	///해당 Widget 생성자
 	virtual void NativeConstruct( ) override;
@@ -37,5 +40,7 @@ private:
 	UFUNCTION( )
 	void SendChatting( const FText& Text, ETextCommit::Type CommitMethod );
 
+	UFUNCTION()
+	void QuitUI();
 
 };

@@ -19,11 +19,23 @@ class CHATTINGCLIENT_API UShowRoomList_Widget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* QuitUserList_Button;
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UScrollBox* List_ScrollBox;
+
+public:
+
+	///해당 Widget 생성자 역할 함수
+	virtual void NativeConstruct() override;
+
 	//방 목록 추가
 	UFUNCTION()
 	bool AddRoomListWidget( const FString& Message );
 
-	///해당 Widget 생성자 역할 함수
+private:
 	UFUNCTION()
-	virtual void NativeConstruct() override;
+	void QuitUI();
+
 };

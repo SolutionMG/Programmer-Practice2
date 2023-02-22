@@ -1078,15 +1078,18 @@ bool BaseServer::RequestRoomList( const SOCKET& socket )
     size_t roomSize = m_chattingRooms.size();
     m_chattRoomLock.unlock();
 
-    player.SendPacket(  "--------------------------------방 목록--------------------------------\n\r" );
+    std::string parse;
+    parse = "--------------------------------방 목록--------------------------------\n\r";
+
 
 
     if ( roomSize == 0 )
     {
         /// 방이 없음.
-        player.SendPacket("방이 존재하지 않습니다.\n\r");
-        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        parse += "방이 존재하지 않습니다.\n\r";
+        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+        parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+        player.SendPacket( parse );
         return true;
     }
 
@@ -1117,10 +1120,11 @@ bool BaseServer::RequestRoomList( const SOCKET& socket )
     }
     m_chattRoomLock.unlock();
 
-    player.SendPacket( roomsInfo.c_str() );
-    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
-    player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+    parse += roomsInfo;
+    parse += RenderMessageMacro::DIVIDE_LINE_MESSAGE;
+    parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
+    parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
+    player.SendPacket( parse );
 
     return true;
 }

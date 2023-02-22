@@ -3,6 +3,9 @@
 
 #include "ChattingRoom_Widget.h"
 #include "ServerManager.h"
+#include "ChattingGameMode.h"
+
+#include "Runtime/UMG/Public/Components/Button.h"
 #include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "Runtime/UMG/Public/Components/EditableTextBox.h"
 #include "Runtime/UMG/Public/Components/Scrollbox.h"
@@ -11,6 +14,8 @@ void UChattingRoom_Widget::NativeConstruct( )
 {
 	if ( Message_TextBox )
 		Message_TextBox->OnTextCommitted.AddDynamic( this, &UChattingRoom_Widget::SendChatting );
+	if ( ChattingRoomQuit_Button )
+		ChattingRoomQuit_Button->OnClicked.AddDynamic( this, &UChattingRoom_Widget::QuitUI );
 }
 
 void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type CommitMethod )
@@ -51,6 +56,36 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 	default:
 	break;
 	}
+}
+
+void UChattingRoom_Widget::QuitUI()
+{
+	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
+	if ( server == nullptr )
+	{
+		UE_LOG( LogTemp, Warning, TEXT( "LoginRequest server->GetInstance Failed" ) );
+		return;
+	}
+
+	if ( !server->SendPacket( "/X") )
+	{
+		UE_LOG( LogTemp, Warning, TEXT( "LoginRequest server->SendPacket Failed" ) );
+		return;
+	}
+
+	AChattingGameMode* gameMode = Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) );
+	if ( !gameMode )
+		return;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> NextUI( TEXT( "/Game/UserInterfaces/LobbyWidgetBP" ) );
+	TSubclassOf<UUserWidget> NextWidgetClass;
+	if ( NextUI.Succeeded() )
+	{
+		NextWidgetClass = NextUI.Class;
+		gameMode->ChangeMenuWidget( NextWidgetClass );
+	}
+
+	this->RemoveFromParent();
 }
 
 bool UChattingRoom_Widget::AddChatLogWidget( const FString& Message )
