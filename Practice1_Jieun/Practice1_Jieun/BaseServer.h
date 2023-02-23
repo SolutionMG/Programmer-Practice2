@@ -73,7 +73,7 @@ private:
 
 	bool RequestUserList( const SOCKET& socket);
 	bool RequestUserInfo( const SOCKET& socket);
-	bool RequestNote( const SOCKET& socket);
+	bool RequestNote( const SOCKET& socket, bool isRoom = false);
 
 	bool RequestRoomExit( const SOCKET& socket );
 

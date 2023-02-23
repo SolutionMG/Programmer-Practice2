@@ -14,6 +14,10 @@ void UChattingRoom_Widget::NativeConstruct( )
 {
 	if ( Message_TextBox )
 		Message_TextBox->OnTextCommitted.AddDynamic( this, &UChattingRoom_Widget::SendChatting );
+
+	if ( SecretMessage_Button )
+		SecretMessage_Button->OnClicked.AddDynamic( this, &UChattingRoom_Widget::SendSecretMessage );
+
 	//if ( ChattingRoomQuit_Button )
 	//	ChattingRoomQuit_Button->OnClicked.AddDynamic( this, &UChattingRoom_Widget::QuitUI );
 }
@@ -75,6 +79,14 @@ void UChattingRoom_Widget::QuitUI()
 		return;
 
 	this->RemoveFromParent();
+}
+
+void UChattingRoom_Widget::SendSecretMessage()
+{
+	//庇加富 UI 积己
+	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
+	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );
 }
 
 bool UChattingRoom_Widget::AddChatLogWidget( const FString& Message )

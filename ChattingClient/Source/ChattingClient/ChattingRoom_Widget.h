@@ -28,6 +28,10 @@ public:
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* ChattingRoomQuit_Button;
 
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* SecretMessage_Button;
+
+	
 public:
 	///해당 Widget 생성자
 	virtual void NativeConstruct( ) override;
@@ -42,5 +46,8 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	void QuitUI();
+
+	UFUNCTION()
+	void SendSecretMessage();
 
 };

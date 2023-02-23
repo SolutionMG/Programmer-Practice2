@@ -699,7 +699,7 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
     return true;
 }
 
-bool BaseServer::RequestNote( const SOCKET& socket )
+bool BaseServer::RequestNote( const SOCKET& socket, bool isRoom )
 {
     m_playersLock.lock();
     auto& player = m_players[socket];
@@ -709,9 +709,12 @@ bool BaseServer::RequestNote( const SOCKET& socket )
 
     if (message.length() <= 2)
     {
-        player.SendPacket( RenderMessageMacro::FAILED_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-        player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        if ( !isRoom )
+        {
+            player.SendPacket( RenderMessageMacro::FAILED_COMMAND_MESSAGE );
+            player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+            player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+        }
         return false;
     }
 
@@ -758,21 +761,20 @@ bool BaseServer::RequestNote( const SOCKET& socket )
     if ( isExistPlayer == false )
     {
         parse += "<귓속말> 존재하지 않는 유저입니다.\n\r";
-        parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
         parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
 
         player.SendPacket( parse );
-
+        return false;
     }
     else
     {
         if ( name == player.GetName() )
         {
             parse += "<귓속말> 본인에게는 귓속말을 할 수 없습니다.\n\r";
-            parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
             parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
 
             player.SendPacket( parse );
+            return false;
         }
         else
         {
@@ -797,7 +799,7 @@ bool BaseServer::RequestNote( const SOCKET& socket )
 
     }
 
-    return false;
+    return true;
 }
 
 bool BaseServer::RequestRoomExit( const SOCKET& socket )
@@ -1266,14 +1268,39 @@ void BaseServer::LogOnCommandProcess()
 
 bool BaseServer::Chatting( const SOCKET& socket )
 {
-    std::string userMessage = "[";
     m_playersLock.lock();
     auto& player = m_players[socket];
     m_playersLock.unlock();
+    std::string message = { player.GetChattingLog().cbegin(),player.GetChattingLog().cend() };
 
+
+    ///채팅방 내 귓속말 기능
+    ///귓속말 커맨드 였으면 종료  
+    if ( message.length() >= 4 )
+    {
+        std::string noteCheck = "";
+        if ( message[ 0 ] > 'a' && message[ 0 ] < 'z' )
+        {
+            noteCheck += message[ 0 ] - ( 'a' - 'A' );
+
+        }
+        if ( message[ 1 ] > 'a' && message[ 1 ] < 'z' )
+        {
+            noteCheck += message[ 1 ] - ( 'a' - 'A' );
+        }
+
+        if ( noteCheck == "TO" )
+        {
+            if ( message[ 2 ] == ' ' )
+            {
+                if ( RequestNote( socket, true ) )
+                    return true;
+            }
+        }
+    }
+    std::string userMessage = "[";
     int roomIndex = player.GetRoomNumber();
     userMessage += player.GetName();
-    std::string message = { player.GetChattingLog().cbegin(),player.GetChattingLog().cend() };
 
     userMessage += "]";
     userMessage += " ";
