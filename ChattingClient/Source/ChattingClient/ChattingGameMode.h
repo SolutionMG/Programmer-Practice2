@@ -26,6 +26,9 @@ private:
 		/** The widget instance that we are using as our menu. */
 	UPROPERTY( )
 	UUserWidget* CurrentWidget;
+
+	UPROPERTY()
+	UUserWidget* CurrentUI;
 public:
 	UFUNCTION(BlueprintCallable )
 	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass);

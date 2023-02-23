@@ -76,7 +76,7 @@ void ULobby_Widget::RequestRoomCreate()
 
 void ULobby_Widget::RequestSecretMessage( )
 {
-	//规 父甸扁 UI 积己
+	//庇加富 UI 积己
 	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
