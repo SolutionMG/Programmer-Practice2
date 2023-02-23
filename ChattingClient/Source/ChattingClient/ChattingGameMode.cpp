@@ -49,7 +49,7 @@ void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClas
 		CurrentWidget->AddToViewport( );
 }
 
-UUserWidget* AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
+UUserWidget* AChattingGameMode::ChangeUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
 	if ( CurrentUI )
 	{
@@ -67,6 +67,20 @@ UUserWidget* AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidg
 
 	CurrentUI->AddToViewport();
 	return CurrentUI;
+}
+
+UUserWidget* AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
+{
+	if ( !NewWidgetClass )
+		return nullptr;
+
+	UUserWidget* NewUI = CreateWidget<UUserWidget>( GetWorld(), NewWidgetClass );
+	if ( !NewUI )
+		return nullptr;
+
+	NewUI->AddToViewport();
+
+	return NewUI;
 }
 
 void AChattingGameMode::SetisChattingRoom( const bool& isRoom )

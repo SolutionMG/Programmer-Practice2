@@ -71,7 +71,7 @@ void ULobby_Widget::RequestRoomCreate()
 	//방 만들기 UI 생성
 	FString path = "/Game/UserInterfaces/RoomCreateWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
-	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->CreateUIWidget( widget );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->ChangeUIWidget( widget );
 }
 
 void ULobby_Widget::RequestSecretMessage( )
@@ -79,7 +79,7 @@ void ULobby_Widget::RequestSecretMessage( )
 	//귓속말 UI 생성
 	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );
 }
 
 void ULobby_Widget::RequestRoomEnter()
@@ -87,7 +87,7 @@ void ULobby_Widget::RequestRoomEnter()
 	///방 입장 번호 입력 UI
 	FString path = "/Game/UserInterfaces/RoomEnterWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );
 }
 
 void ULobby_Widget::RequestRoomInfo()
@@ -95,7 +95,7 @@ void ULobby_Widget::RequestRoomInfo()
 	///방 정보 UI
 	FString path = "/Game/UserInterfaces/RoomInfoInputWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );
 }
 
 void ULobby_Widget::RequestUserInfo()
@@ -103,7 +103,7 @@ void ULobby_Widget::RequestUserInfo()
 	///유저 정보 UI
 	FString path = "/Game/UserInterfaces/UserInfoInputWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->CreateUIWidget( widget );
+	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );
 }
 
 

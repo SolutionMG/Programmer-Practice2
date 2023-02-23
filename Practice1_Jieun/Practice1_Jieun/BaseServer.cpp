@@ -528,6 +528,7 @@ bool BaseServer::RequestUserInfo( const SOCKET& socket )
             _itoa_s( roomNumber, roomIndex, 10 );
             parse += roomIndex;
             parse += "번 방에 있습니다.\n\r";
+            parse += RenderMessageMacro::SELECT_COMMAND_MESSAGE;
             parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
             player.SendPacket( parse.c_str() );
         }
@@ -667,16 +668,16 @@ bool BaseServer::RequestRoomInfo( const SOCKET& socket )
             sendMessage += "개설시간:   ";
             sendMessage += room.second.GetRoomInTime();
 
+            m_playersLock.lock();
             for (const auto& id : room.second.GetAccessorIndex())
             {
-                m_playersLock.lock();
                 sendMessage += "\n\r참여자:";
                 sendMessage += m_players[id].GetName();
                 sendMessage += "    참여시간:   ";
                 sendMessage += m_players[id].GetRoomInTime();
                 sendMessage += "\n\r";
-                m_playersLock.unlock();
             }
+            m_playersLock.unlock();
 
             parse += RenderMessageMacro::ROOMINFO_LINE_MESSAGE;
             parse += sendMessage;
@@ -898,6 +899,7 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
     std::string max = "";
     std::string roomName = "";
     bool flag = false;
+    int roomNameStart = 0;
     for ( int i = 2; i < message.length(); ++i )
     {
         if ( message[i] == ' ' )
@@ -911,10 +913,14 @@ bool BaseServer::RequestRoomCreate( const SOCKET& socket )
         }
         else
         {
-            if ( message[i] != ' ' )
-                roomName += message[i];
+            if ( message[ i ] != ' ' )
+            {
+                roomNameStart = i;
+                break;
+            }
         }
     }
+    roomName = { message.begin() + roomNameStart, message.end() };
 
     /// 방이름이 없음
     if ( roomName.empty() == true )
@@ -1177,7 +1183,8 @@ void BaseServer::LogOnCommandProcess()
 
         else
         {
-            bool check = false;
+            bool sameCheck = false;
+            bool gapCheck = false;
 
             SOCKET socket = m_logOn.front();
             m_logOn.pop();
@@ -1191,37 +1198,56 @@ void BaseServer::LogOnCommandProcess()
             player.StartLock();
             const std::string name{ player.GetChattingLog().cbegin() + sizeof(CommandMessage::LOGON),player.GetChattingLog().cend() };
             player.EndLock();
-            /// 동일이름 유저 존재유무 확인
 
-            m_playersLock.lock();
-            for (const auto& p : m_players)
+            std::string parse = "";
+            /// 이름에 공백 존재유무 검사
+            if (name.find(" ") != std::string::npos )
             {
-                if (name == p.second.GetName())
+                gapCheck = true;
+            }
+            if ( !gapCheck )
+            {
+                /// 동일이름 유저 존재유무 확인
+                m_playersLock.lock();
+                for ( const auto& p : m_players )
                 {
-                    check = true;
-                    break;
+                    if ( name == p.second.GetName() )
+                    {
+                        sameCheck = true;
+                        break;
+                    }
+                }
+                m_playersLock.unlock();
+
+
+                if ( sameCheck == false )
+                {
+                    player.StartLock();
+                    player.ClearChattingBuffer();
+                    player.SetName( name.c_str() );
+                    player.SetState( EClientState::LOGON );
+                    player.EndLock();
+                    std::cout << name.c_str() << "[" << socket << "] LogOn" << std::endl;
+
+                    ///클라이언트에 로그인 성공 문구 출력
+                    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+                    player.SendPacket( RenderMessageMacro::SUCCESS_LOGON_MESSAGE );
+                    player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
+                    player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
+                    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
+                }
+
+                else
+                {
+                    player.StartLock();
+                    player.ClearChattingBuffer();
+                    player.EndLock();
+
+                    ///클라이언트에 로그인 실패 문구 출력
+                    player.SendPacket( RenderMessageMacro::LOGON_FAILED );
+                    player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
                 }
             }
-            m_playersLock.unlock();
-
-           
-            if (check == false)
-            {
-                player.StartLock();
-                player.ClearChattingBuffer();
-                player.SetName( name.c_str() );
-                player.SetState( EClientState::LOGON );
-                player.EndLock();
-                std::cout << name.c_str() << "[" << socket << "] LogOn" << std::endl;
-
-                ///클라이언트에 로그인 성공 문구 출력
-                player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
-                player.SendPacket( RenderMessageMacro::SUCCESS_LOGON_MESSAGE );
-                player.SendPacket( RenderMessageMacro::DIVIDE_LINE_MESSAGE );
-                player.SendPacket( RenderMessageMacro::SELECT_COMMAND_MESSAGE );
-                player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
-            }
-
             else
             {
                 player.StartLock();
@@ -1232,6 +1258,7 @@ void BaseServer::LogOnCommandProcess()
                 player.SendPacket( RenderMessageMacro::LOGON_FAILED );
                 player.SendPacket( RenderMessageMacro::COMMAND_WAIT_MESSAGE );
             }
+
             player.ReceivePacket();
         }
     }
@@ -1301,7 +1328,6 @@ bool BaseServer::ReassemblePacket( char* packet, const DWORD& bytes, const SOCKE
                 if ( ele >= 'a' && ele <= 'z' )
                     ele -= 'a' - 'A';
             }
-
             std::cout << command << std::endl;
             StateWorkBranch( socket, command );
             flag = true;

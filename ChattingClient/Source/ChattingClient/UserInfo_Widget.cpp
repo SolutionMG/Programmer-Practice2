@@ -19,11 +19,18 @@ void UUserInfo_Widget::SetUserInfo( const FString& info )
 	if ( !UserInfo_Srcollbox )
 		return;
 
-	UTextBlock* NewTextBlock = NewObject<UTextBlock>();
-	NewTextBlock->SetText( FText::FromString( info ) );
-	NewTextBlock->SetColorAndOpacity( FLinearColor::Black );
-	UserInfo_Srcollbox->AddChild( NewTextBlock );
-	UserInfo_Srcollbox->ScrollToEnd();
+	TArray<FString> messageArray;
+	const TCHAR* deletes[] = { TEXT( "\n\r" ) };
+	info.ParseIntoArray( messageArray, deletes, 1 );
+	for ( int32 i = 0; i < messageArray.Num() - 2; ++i )
+	{
+		UTextBlock* NewTextBlock = NewObject<UTextBlock>();
+		NewTextBlock->SetText( FText::FromString( messageArray[ i ] ) );
+		NewTextBlock->SetColorAndOpacity( FLinearColor::Black );
+
+		UserInfo_Srcollbox->AddChild( NewTextBlock );
+		UserInfo_Srcollbox->ScrollToEnd();
+	}
 }
 
 void UUserInfo_Widget::QuitUI()

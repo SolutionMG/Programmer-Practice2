@@ -175,7 +175,7 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			/// 로그인 실패
 			FString path = "/Game/UserInterfaces/LoginFailedWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
-			gameMode->CreateUIWidget( widget );
+			gameMode->ChangeUIWidget( widget );
 
 			return true;
 		}
@@ -192,14 +192,14 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			///방 생성 실패
 			FString path = "/Game/UserInterfaces/RoomCreateFaileWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			gameMode->CreateUIWidget( widget );
+			gameMode->ChangeUIWidget( widget );
 		}
 		else if ( packet.Contains( SearchMacro::USER_LIST ) )
 		{
 			///유저 목록
 			FString path = "/Game/UserInterfaces/UseListWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			UUserWidget* UI = gameMode->CreateUIWidget( widget );
+			UUserWidget* UI = gameMode->ChangeUIWidget( widget );
 
 			if ( UI != nullptr )
 				Cast<UShowUserList_Widget>( UI )->AddUserListWidget( packet );
@@ -209,7 +209,7 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			///방 목록
 			FString path = "/Game/UserInterfaces/RoomListWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			UUserWidget* UI = gameMode->CreateUIWidget( widget );
+			UUserWidget* UI = gameMode->ChangeUIWidget( widget );
 
 			if ( UI != nullptr )
 				Cast<UShowRoomList_Widget>( UI )->AddRoomListWidget( packet );
@@ -228,7 +228,7 @@ bool UServerManager::ProcessPacket( const FString& packet )
 		{
 			FString path = "/Game/UserInterfaces/RoomEnterFailedWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			gameMode->CreateUIWidget( widget );
+			gameMode->ChangeUIWidget( widget );
 		}
 		else if ( packet.Contains( SearchMacro::ROOM_ENTER ) )
 		{
@@ -243,14 +243,14 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			///방 정보 실패
 			FString path = "/Game/UserInterfaces/RoomInfoFailedWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			gameMode->CreateUIWidget( widget );
+			gameMode->ChangeUIWidget( widget );
 		}
 		else if ( packet.Contains( SearchMacro::ROOMINFO_SUCCESS ) )
 		{
 			///방 정보 성공
 			FString path = "/Game/UserInterfaces/RoomInfoWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			UUserWidget* UI = gameMode->CreateUIWidget( widget );
+			UUserWidget* UI = gameMode->ChangeUIWidget( widget );
 
 			if ( UI != nullptr )
 				Cast<URoomInfo_Widget>( UI )->SetRoomInfo( packet );
@@ -261,14 +261,14 @@ bool UServerManager::ProcessPacket( const FString& packet )
 			///유저 정보 실패
 			FString path = "/Game/UserInterfaces/UserInfoFailedWIdgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			gameMode->CreateUIWidget( widget );
+			gameMode->ChangeUIWidget( widget );
 		}
 		else if ( packet.Contains( SearchMacro::USERINFO_SUCCESS ) )
 		{
 			///유저 정보 성공
 			FString path = "/Game/UserInterfaces/UserInfoWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
-			UUserWidget* UI = gameMode->CreateUIWidget( widget );
+			UUserWidget* UI = gameMode->ChangeUIWidget( widget );
 
 			if ( UI != nullptr )
 				Cast<UUserInfo_Widget>( UI )->SetUserInfo( packet );

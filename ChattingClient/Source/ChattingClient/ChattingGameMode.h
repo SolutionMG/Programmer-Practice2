@@ -33,6 +33,8 @@ public:
 	UFUNCTION(BlueprintCallable )
 	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass);
 	UFUNCTION()
+	UUserWidget* ChangeUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
+	UFUNCTION()
 	UUserWidget* CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
 
 	UFUNCTION( BlueprintCallable )

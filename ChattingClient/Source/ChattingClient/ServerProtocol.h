@@ -30,7 +30,7 @@ namespace RenderMessageMacro
 	///LOGIN
 	constexpr char ACCESS_MESSAGE[] = "** 안녕하세요. 텍스트 채팅 서버 Ver 0.1입니다.\n\r";
 	constexpr char LOGON_REQUEST[] = "** 로그인 명령어(LOGIN)을 사용해주세요. ex)LOGIN  [이름]\n\r";
-	constexpr char LOGON_FAILED[] = "** <로그인 실패>아이디를 이미 사용중입니다. 다른 아이디를 사용해주세요.\n\r";
+	constexpr char LOGON_FAILED[] = "** <로그인 실패>사용중인 아이디 혹은 이름에 공백이 있습니다.\n\r";
 	constexpr char SUCCESS_LOGON_MESSAGE[] = "<로그인 성공> 반갑습니다. 텍스트 채팅 서버 ver 0.1입니다.\n\r이용중 불편하신 점이 있으면 아래 이메일로 문의 바랍니다.\n\r감사합니다.\n\r\n\remail:jieun.kim23@nm-neo.com\n\r";
 
 	///LINE, COMMANDLINE
