@@ -789,6 +789,7 @@ bool BaseServer::RequestNote( const SOCKET& socket )
             parse += " ] ";
             parse += note;
             parse += "\n\r";
+            parse += "귓속말이 왔습니다.\n\r";
             parse += RenderMessageMacro::COMMAND_WAIT_MESSAGE;
             targetPlayerInfo->SendPacket( parse.c_str() );
         }
@@ -803,6 +804,7 @@ bool BaseServer::RequestRoomExit( const SOCKET& socket )
     m_playersLock.lock();
     auto& player = m_players[ socket ];
     m_playersLock.unlock();
+
     std::string name;
     int beforeRoomIndex = -1;
     {
@@ -819,6 +821,7 @@ bool BaseServer::RequestRoomExit( const SOCKET& socket )
     {
         m_chattRoomLock.lock();
         auto& room = m_chattingRooms[ beforeRoomIndex ];
+        int roomIndex = room.GetIndex();
         m_chattRoomLock.unlock();
 
         room.StartLock();
@@ -829,12 +832,12 @@ bool BaseServer::RequestRoomExit( const SOCKET& socket )
         {
             ///사용하지 않게된 인덱스 회수
             m_chattRoomNumLock.lock();
-            m_charRoomNumber.push( room.GetIndex() );
+            m_charRoomNumber.push( roomIndex );
             m_chattRoomNumLock.unlock();
 
             ///방폭파
             m_chattRoomLock.lock();
-            m_chattingRooms.erase( room.GetIndex() );
+            m_chattingRooms.erase( roomIndex );
             m_chattRoomLock.unlock();
         }
         else
@@ -1335,18 +1338,19 @@ bool BaseServer::Disconnect( SOCKET socket )
 
         room.StartLock();
         int total = room.GetTotalPlayer();
+        int index = room.GetIndex();
         room.EndLock();
 
         if (total == 1)
         {
             ///사용하지 않게된 인덱스 회수
             m_chattRoomNumLock.lock();
-            m_charRoomNumber.push( room.GetIndex() );
+            m_charRoomNumber.push( index );
             m_chattRoomNumLock.unlock();
 
             ///방폭파
             m_chattRoomLock.lock();
-            m_chattingRooms.erase( room.GetIndex() );
+            m_chattingRooms.erase( index );
             m_chattRoomLock.unlock();
         }
         else

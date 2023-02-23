@@ -42,24 +42,7 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 			return;
 		}
 
-		TArray<FString> parseArray;
-
-		FString parse = Text.ToString();
-		const TCHAR* deletes[] = { TEXT( "\n\r" ), TEXT("\n")};
-		parse.ParseIntoArray( parseArray, deletes, 1 );
-
-		FString parse2;
-		for ( const auto& m : parseArray )
-		{
-			if ( m != "\n\r" && m != ">>" && m!="\n" )
-				parse2 += m;
-		}
-
-		UTextBlock* NewTextBlock = NewObject<UTextBlock>( );
-		NewTextBlock->SetText( FText::FromString( parse2) );
-		NewTextBlock->SetColorAndOpacity( FLinearColor::Black );
-		ChatLog->AddChild( NewTextBlock );
-		ChatLog->ScrollToEnd( );
+		AddChatLogWidget( Text.ToString() );
 		Message_TextBox->SetText( FText() );
 	}
 	break;

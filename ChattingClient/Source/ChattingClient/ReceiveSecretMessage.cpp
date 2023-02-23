@@ -22,7 +22,7 @@ void UReceiveSecretMessage::SetMessage( const FString& message )
 	message.ParseIntoArray( messageArray, deletes, 1 );
 
 	FString parse;
-	for ( int i = 0; i< messageArray.Num() - 1; ++i )
+	for ( int i = 0; i< messageArray.Num() - 2; ++i )
 	{
 		parse += messageArray[ i ];
 	}

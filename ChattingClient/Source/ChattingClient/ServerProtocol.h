@@ -74,7 +74,7 @@ namespace SearchMacro
 	TCHAR ROOMINFO_FAILED[] =  L"<방 정보 불러오기 실패>";
 
 	TCHAR USERINFO_SUCCESS[] = L"<유저 정보>";
-	TCHAR USERINFO_FAILED[] = L"<유저 정보 불러오기 실패>";
+	TCHAR USERINFO_FAILED[] = L"<유저 정보 보기 실패>";
 }
 
 /// Login Packet
