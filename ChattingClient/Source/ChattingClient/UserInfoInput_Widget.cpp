@@ -51,7 +51,7 @@ void UUserInfoInput_Widget::SendChatting( const FText& Text, ETextCommit::Type C
 			return;
 		}
 
-		Name_Textblock->SetText( FText() );
+		Name_Textblock->SetText( FText::GetEmpty() );
 		this->RemoveFromParent();
 	}
 	break;

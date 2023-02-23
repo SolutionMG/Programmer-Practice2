@@ -1284,9 +1284,17 @@ bool BaseServer::Chatting( const SOCKET& socket )
             noteCheck += message[ 0 ] - ( 'a' - 'A' );
 
         }
+        else
+        {
+            noteCheck += message[ 0 ];
+        }
         if ( message[ 1 ] > 'a' && message[ 1 ] < 'z' )
         {
             noteCheck += message[ 1 ] - ( 'a' - 'A' );
+        }
+        else
+        {
+            noteCheck += message[ 1 ];
         }
 
         if ( noteCheck == "TO" )

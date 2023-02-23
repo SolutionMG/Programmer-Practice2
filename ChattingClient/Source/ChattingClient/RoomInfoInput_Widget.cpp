@@ -52,7 +52,7 @@ void URoomInfoInput_Widget::SendChatting( const FText& Text, ETextCommit::Type C
 		}
 
 
-		RoomInfo_TextBox->SetText( FText() );
+		RoomInfo_TextBox->SetText( FText::GetEmpty() );
 		this->RemoveFromParent();
 	}
 	break;

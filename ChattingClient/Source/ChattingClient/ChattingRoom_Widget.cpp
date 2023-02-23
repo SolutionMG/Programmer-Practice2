@@ -47,7 +47,7 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 		}
 
 		AddChatLogWidget( Text.ToString() );
-		Message_TextBox->SetText( FText() );
+		Message_TextBox->SetText( FText::GetEmpty() );
 	}
 	break;
 	case ETextCommit::OnUserMovedFocus:
