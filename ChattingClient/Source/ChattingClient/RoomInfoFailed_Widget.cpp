@@ -5,6 +5,7 @@
 
 void URoomInfoFailed_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &URoomInfoFailed_Widget::QuitUI );
 }

@@ -19,12 +19,15 @@ class CHATTINGCLIENT_API URoomCreate_Widget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	/// 방 생성 요청용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomCreate_Button;
 
+	/// 방 이름용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UEditableTextBox* RoomName_TextBox;
 
+	/// 방 인원용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UEditableTextBox* RoomMax_TextBox;
 
@@ -32,8 +35,8 @@ public:
 	virtual void NativeConstruct( ) override;
 
 private:
+	/// 방생성 요청 함수
 	UFUNCTION( )
 	void RequestCreateRoom();
-
 
 };

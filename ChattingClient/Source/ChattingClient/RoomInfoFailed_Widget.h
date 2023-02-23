@@ -16,6 +16,7 @@ class CHATTINGCLIENT_API URoomInfoFailed_Widget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	/// 위젯 종료용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* QuitButton;
 

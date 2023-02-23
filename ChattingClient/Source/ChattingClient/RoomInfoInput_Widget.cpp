@@ -10,6 +10,7 @@
 
 void URoomInfoInput_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &URoomInfoInput_Widget::QuitUI );
 	if ( RoomInfo_TextBox )
@@ -24,6 +25,7 @@ void URoomInfoInput_Widget::QuitUI()
 
 void URoomInfoInput_Widget::SendChatting( const FText& Text, ETextCommit::Type CommitMethod )
 {
+	/// Enter 입력 후 방 정보 요청 Send
 	if ( !RoomInfo_TextBox )
 		return;
 	switch ( CommitMethod )

@@ -28,26 +28,28 @@ private:
 	FString m_encodingBuffer;
 public:
 
-	///ServerManager 초기화 함수
+	/// ServerManager 초기화 함수
 	virtual void Init( ) override;
 
-	///ServerManager 종료 전 Cleanup 함수
+	/// ServerManager 종료 전 Cleanup 함수
 	virtual void Shutdown( ) override;
 
 	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
 	bool ConnectToServer();
 
-	///패킷 타입에 따른 전송 용
+	/// 패킷 타입에 따른 전송 용
 	//UFUNCTION( BlueprintCallable, Category = "Server Communication" )
 	//void SendPacket( int32 type, const FString& packet );
 
-	///기존 문자열 단위 전송 용
+	/// 기존 문자열 단위 전송 용
 	UFUNCTION(BlueprintCallable, Category = "Server Communication")
 	bool SendPacket(const FString& packet);
 
+	/// 패킷 Receive 함수 (논블로킹)
 	UFUNCTION( BlueprintCallable, Category = "Server Communication" )
 	bool ReceivePacket();
 
+	/// 패킷 타입에 따라 처리하는 함수
 	bool ProcessPacket( const FString& packet );
 };
 

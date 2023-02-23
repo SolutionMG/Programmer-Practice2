@@ -10,6 +10,7 @@
 
 void ULobby_Widget::NativeConstruct()
 {
+	/// 버튼에 각 함수 바인딩
 	if ( LobbyExit_Button )
 		LobbyExit_Button->OnClicked.AddDynamic( this, &ULobby_Widget::QuitGame );
 
@@ -37,12 +38,14 @@ void ULobby_Widget::NativeConstruct()
 
 void ULobby_Widget::QuitGame()
 {
+	/// 게임 종료
 	UKismetSystemLibrary::QuitGame( this, 0, EQuitPreference::Quit, false );
 
 }
 
 void ULobby_Widget::RequestUserList()
 {
+	/// 유저 정보 요청 Send
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
 	if ( server == nullptr )
 	{
@@ -55,6 +58,7 @@ void ULobby_Widget::RequestUserList()
 
 void ULobby_Widget::RequestRoomList()
 {
+	/// 방 목록 요청 Send
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
 	if ( server == nullptr )
 	{
@@ -68,7 +72,7 @@ void ULobby_Widget::RequestRoomList()
 
 void ULobby_Widget::RequestRoomCreate()
 {
-	//방 만들기 UI 생성
+	/// 방 만들기 UI 생성
 	FString path = "/Game/UserInterfaces/RoomCreateWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass( ) );
 	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld( ) ) )->ChangeUIWidget( widget );
@@ -76,7 +80,7 @@ void ULobby_Widget::RequestRoomCreate()
 
 void ULobby_Widget::RequestSecretMessage( )
 {
-	//귓속말 UI 생성
+	/// 귓속말 UI 생성
 	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );

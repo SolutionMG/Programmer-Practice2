@@ -10,12 +10,14 @@
 
 void UUserInfo_Widget::NativeConstruct()
 {
+	///버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &UUserInfo_Widget::QuitUI );
 }
 
 void UUserInfo_Widget::SetUserInfo( const FString& info )
 {
+	/// 유저 정보 출력
 	if ( !UserInfo_Srcollbox )
 		return;
 

@@ -17,13 +17,13 @@ void AChattingGameMode::BeginPlay( )
 }
 const bool& AChattingGameMode::GetisChattingRoom( )
 {
-	// TODO: 여기에 return 문을 삽입합니다.
 	return m_isChattingRoom;
 }
 void AChattingGameMode::Tick( float DeletaSecond )
 {
 	AGameMode::Tick( DeletaSecond );
 
+	/// 논블로킹 서버 Receive함수 호출
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
 	if ( !server )
 	{
@@ -35,6 +35,7 @@ void AChattingGameMode::Tick( float DeletaSecond )
 }
 void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
+	/// 메인 위젯 삭제 후 새로 지정
 	if ( CurrentWidget )
 	{
 		CurrentWidget->RemoveFromViewport();
@@ -51,6 +52,7 @@ void AChattingGameMode::ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClas
 
 UUserWidget* AChattingGameMode::ChangeUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
+	/// 메인 팝업 삭제 후 새로 지정
 	if ( CurrentUI )
 	{
 		CurrentUI->RemoveFromViewport();
@@ -71,6 +73,7 @@ UUserWidget* AChattingGameMode::ChangeUIWidget( TSubclassOf<UUserWidget> NewWidg
 
 UUserWidget* AChattingGameMode::CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass )
 {
+	/// 새 팝업 생성
 	if ( !NewWidgetClass )
 		return nullptr;
 

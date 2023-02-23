@@ -12,6 +12,7 @@
 
 void UChattingRoom_Widget::NativeConstruct( )
 {
+	/// 버튼 클릭, 엔터 입력에 따른 함수 바인딩
 	if ( Message_TextBox )
 		Message_TextBox->OnTextCommitted.AddDynamic( this, &UChattingRoom_Widget::SendChatting );
 
@@ -24,6 +25,7 @@ void UChattingRoom_Widget::NativeConstruct( )
 
 void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type CommitMethod )
 {
+	/// Enter 클릭 시 Text 보내기 & 채팅 로그 추가하기
 	switch ( CommitMethod )
 	{
 	case ETextCommit::Default:
@@ -61,6 +63,7 @@ void UChattingRoom_Widget::SendChatting( const FText& Text, ETextCommit::Type Co
 
 void UChattingRoom_Widget::QuitUI()
 {
+	/// 채팅방 나가기 
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
 	if ( !server )
 	{
@@ -74,16 +77,12 @@ void UChattingRoom_Widget::QuitUI()
 		return;
 	}
 
-	AChattingGameMode* gameMode = Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) );
-	if ( !gameMode )
-		return;
-
 	this->RemoveFromParent();
 }
 
 void UChattingRoom_Widget::SendSecretMessage()
 {
-	//귓속말 UI 생성
+	///귓속말 UI 생성
 	FString path = "/Game/UserInterfaces/SendSecretMessageWidgetBP";
 	TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 	Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) )->ChangeUIWidget( widget );
@@ -91,6 +90,7 @@ void UChattingRoom_Widget::SendSecretMessage()
 
 bool UChattingRoom_Widget::AddChatLogWidget( const FString& Message )
 {
+	/// 채팅 로그 메시지 추가하기
 	if ( !ChatLog )
 		return false; 
 

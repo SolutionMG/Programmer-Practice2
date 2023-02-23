@@ -9,6 +9,7 @@
 
 void URoomCreate_Widget::NativeConstruct( )
 {
+	/// 버튼에 함수 바인딩
 	if ( RoomCreate_Button != nullptr )
 	{
 		RoomCreate_Button->OnClicked.AddDynamic( this, &URoomCreate_Widget::RequestCreateRoom );
@@ -17,6 +18,7 @@ void URoomCreate_Widget::NativeConstruct( )
 
 void URoomCreate_Widget::RequestCreateRoom( )
 {
+	/// 방 생성 요청 Send 및 UI 삭제
 	UServerManager* server = Cast<UServerManager>( GetGameInstance( ) );
 	if ( server == nullptr )
 	{

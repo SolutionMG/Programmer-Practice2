@@ -12,6 +12,7 @@
 
 void ULogin_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( LoginRequest_Button )
 	{
 		LoginRequest_Button->OnClicked.AddDynamic( this, &ULogin_Widget::LoginRequest );
@@ -20,6 +21,7 @@ void ULogin_Widget::NativeConstruct()
 
 void ULogin_Widget::LoginRequest()
 {
+	/// 로그인 요청 Send
 	if ( !LoginName_TextBox )
 	{
 		UE_LOG( LogTemp, Warning, TEXT( "LoginRequest LoginName_TextBox is null" ) );

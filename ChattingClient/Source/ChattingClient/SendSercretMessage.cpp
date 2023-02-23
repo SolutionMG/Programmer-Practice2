@@ -12,6 +12,7 @@
 
 void USendSercretMessage::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &USendSercretMessage::QuitUI );
 
@@ -21,6 +22,7 @@ void USendSercretMessage::NativeConstruct()
 
 void USendSercretMessage::SendMessage()
 {
+	/// 귓속말 대상에게 보내기
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
 	if ( server == nullptr )
 	{

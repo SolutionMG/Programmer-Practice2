@@ -17,15 +17,18 @@ class CHATTINGCLIENT_API UUserInfo_Widget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	/// 유저 정보 출력용 변수
 	UPROPERTY( meta = ( BindWidget ) )
-		UScrollBox* UserInfo_Srcollbox;
+	UScrollBox* UserInfo_Srcollbox;
 
+	/// 위젯 종료용 변수
 	UPROPERTY( meta = ( BindWidget ) )
-		UButton* QuitButton;
+	UButton* QuitButton;
 public:
 	///해당 Widget 생성자 역할 함수
 	virtual void NativeConstruct() override;
 
+	/// 유저 정보 출력하기
 	UFUNCTION()
 	void SetUserInfo( const FString& info );
 private:

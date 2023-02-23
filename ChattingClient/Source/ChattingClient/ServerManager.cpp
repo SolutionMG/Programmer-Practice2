@@ -20,12 +20,14 @@ void UServerManager::Init()
 
 void UServerManager::Shutdown( )
 {
+	/// 연결 종료, 소켓 닫기
 	if ( m_socket != nullptr)
 		m_socket->Close();
 }
 
 bool UServerManager::ConnectToServer()
 {
+	/// 서버에 connect 요청
 	m_socket = ISocketSubsystem::Get( PLATFORM_SOCKETSUBSYSTEM )->CreateSocket( NAME_Stream, TEXT( "default" ) );
 	if ( !m_socket )
 		return false;
@@ -44,6 +46,7 @@ bool UServerManager::ConnectToServer()
 	if ( !connect )
 		return false;
 
+	/// connect 후 소켓 속성 논블로킹, 네이글 Off로 변경
 	m_socket->SetNonBlocking( true );
 	m_socket->SetNoDelay( true );
 
@@ -87,6 +90,7 @@ void UServerManager::SendPacket( int32 type, const FString& packet )
 
 bool UServerManager::SendPacket(const FString& packet)
 {
+	/// 문자열 전송
 	if ( !m_socket )
 		return false;
 
@@ -105,6 +109,7 @@ bool UServerManager::SendPacket(const FString& packet)
 
 bool UServerManager::ReceivePacket( )
 {
+	/// 문자열 받아오기
 	if ( !m_socket )
 		return false;
 
@@ -145,6 +150,7 @@ bool UServerManager::ReceivePacket( )
 
 bool UServerManager::ProcessPacket( const FString& packet )
 {
+	/// 패킷에 따른 처리
 	AChattingGameMode* gameMode = Cast<AChattingGameMode>( UGameplayStatics::GetGameMode( GetWorld() ) );
 	if ( !gameMode )
 		return false;
@@ -217,6 +223,7 @@ bool UServerManager::ProcessPacket( const FString& packet )
 
 		else if ( packet.Contains(SearchMacro::SECRET_MESSAGE) )
 		{
+			/// 귓속말 받기
 			FString path = "/Game/UserInterfaces/ReceiveSecretMessageWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 			UUserWidget* UI = gameMode->CreateUIWidget( widget );
@@ -226,12 +233,14 @@ bool UServerManager::ProcessPacket( const FString& packet )
 		}
 		else if ( packet.Contains( SearchMacro ::ROOM_ENTERFAILED ) )
 		{
+			/// 방 입장 실패
 			FString path = "/Game/UserInterfaces/RoomEnterFailedWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 			gameMode->ChangeUIWidget( widget );
 		}
 		else if ( packet.Contains( SearchMacro::ROOM_ENTER ) )
 		{
+			/// 방 입장
 			FString path = "/Game/UserInterfaces/ChattingRoomWidgetBP";
 			TSubclassOf<UUserWidget> widget = ConstructorHelpersInternal::FindOrLoadClass( path, UUserWidget::StaticClass() );
 			gameMode->ChangeMenuWidget( widget );

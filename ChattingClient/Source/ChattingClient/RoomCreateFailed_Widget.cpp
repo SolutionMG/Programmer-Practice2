@@ -7,6 +7,7 @@
 
 void URoomCreateFailed_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( RoomCreateFailed_Button )
 	{
 		RoomCreateFailed_Button->OnClicked.AddDynamic( this, &URoomCreateFailed_Widget::QuitUI );

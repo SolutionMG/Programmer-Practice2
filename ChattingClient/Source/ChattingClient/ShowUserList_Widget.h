@@ -19,9 +19,11 @@ class CHATTINGCLIENT_API UShowUserList_Widget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	/// 위젯 종료용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* QuitUserList_Button;
 
+	/// 유저 목록 출력용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UScrollBox* List_ScrollBox;
 

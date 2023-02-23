@@ -9,6 +9,7 @@
 
 void UShowRoomList_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitUserList_Button != nullptr )
 	{
 		QuitUserList_Button->OnClicked.AddDynamic( this, &UShowRoomList_Widget::QuitUI );
@@ -17,6 +18,7 @@ void UShowRoomList_Widget::NativeConstruct()
 
 bool UShowRoomList_Widget::AddRoomListWidget( const FString& Message )
 {
+	/// 방 목록 정보 출력
 	if ( !List_ScrollBox )
 		return false;
 

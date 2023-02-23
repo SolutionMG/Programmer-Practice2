@@ -16,10 +16,11 @@ class CHATTINGCLIENT_API ULoginFailed_Widget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-
+	/// UI 종료용 버튼
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* LoginFailed_OffButton;
 
+	/// 로그인 실패 텍스트 문구 버튼
 	UPROPERTY( meta = ( BindWidget ) )
 	UTextBlock* LoginFailed_TextBox;
 

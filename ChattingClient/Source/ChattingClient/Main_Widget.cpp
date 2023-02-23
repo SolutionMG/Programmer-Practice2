@@ -14,6 +14,7 @@
 UMain_Widget::UMain_Widget( const FObjectInitializer& ObjectInitializer )
 	: Super( ObjectInitializer )
 {
+	/// 다음 위젯 불러오기
 	static ConstructorHelpers::FClassFinder<UUserWidget> NextUI( TEXT( "/Game/UserInterfaces/LoginWidgetBP" ) );
 
 	if ( NextUI.Succeeded() )
@@ -25,7 +26,7 @@ UMain_Widget::UMain_Widget( const FObjectInitializer& ObjectInitializer )
 
 void UMain_Widget::NativeConstruct()
 {
-
+	/// 각 버튼 함수 바인딩
 	if ( LoginButton )
 	{
 		LoginButton->OnClicked.AddDynamic( this, &UMain_Widget::AccessRequest );
@@ -40,6 +41,7 @@ void UMain_Widget::NativeConstruct()
 
 void UMain_Widget::AccessRequest()
 {
+	/// 위젯 로그인 위젯으로 변경
 	UServerManager* server = Cast<UServerManager>(GetGameInstance());
 	if (server == nullptr)
 	{

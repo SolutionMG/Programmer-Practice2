@@ -9,6 +9,7 @@
 
 void UShowUserList_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitUserList_Button != nullptr )
 	{
 		QuitUserList_Button->OnClicked.AddDynamic( this, &UShowUserList_Widget::QuitUI );
@@ -22,6 +23,7 @@ void UShowUserList_Widget::QuitUI()
 
 bool UShowUserList_Widget::AddUserListWidget( const FString& Message )
 {
+	/// 유저 목록 출력
 	if ( !List_ScrollBox )
 		return false;
 

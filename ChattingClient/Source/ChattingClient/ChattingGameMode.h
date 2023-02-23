@@ -15,37 +15,49 @@ class CHATTINGCLIENT_API AChattingGameMode : public AGameMode
 	GENERATED_BODY()
 	
 public:
-	/** The Widget class we will use as our menu when the game starts. */
+	/// 게임 시작 시 사용할 위젯 Subclass 변수
 	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "UMG Game" )
 	TSubclassOf<UUserWidget> startingWidgetClass;
 
 private:
+	/// 채팅방에 있는 지 유무 flag 변수
 	UPROPERTY( )
 	bool m_isChattingRoom;
 
-		/** The widget instance that we are using as our menu. */
+	/// 메인 위젯으로 사용할 변수
 	UPROPERTY( )
 	UUserWidget* CurrentWidget;
 
+	/// 메인 팝업 위젯으로 사용할 변수
 	UPROPERTY()
 	UUserWidget* CurrentUI;
 public:
+
+	/// 메인 위젯 변경 시 호출할 함수
 	UFUNCTION(BlueprintCallable )
 	void ChangeMenuWidget( TSubclassOf<UUserWidget> NewWidgetClass);
+
+	/// 메인 팝업 위젯 변경 시 호출할 함수
 	UFUNCTION()
 	UUserWidget* ChangeUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
+
+	/// 메인 팝업 위젯을 생성할 시 호출할 함수
 	UFUNCTION()
 	UUserWidget* CreateUIWidget( TSubclassOf<UUserWidget> NewWidgetClass );
 
+	/// Set
 	UFUNCTION( BlueprintCallable )
 	void SetisChattingRoom( const bool& isRoom );
+
+
+	/// Get
 	UFUNCTION( )
 	const bool& GetisChattingRoom( );
 	UFUNCTION( )
 	UUserWidget* GetCurrentWidget( );
 
 protected:
-	/** Called when the game Starts. */
+	
 	virtual void BeginPlay( ) override;
 
 	virtual void Tick( float DeletaSecond) override;

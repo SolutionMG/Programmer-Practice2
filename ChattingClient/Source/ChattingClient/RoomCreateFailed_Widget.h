@@ -18,6 +18,7 @@ class CHATTINGCLIENT_API URoomCreateFailed_Widget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	/// 방 생성 실패 UI
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomCreateFailed_Button;
 

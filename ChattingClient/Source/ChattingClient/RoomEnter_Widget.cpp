@@ -8,6 +8,7 @@
 
 void URoomEnter_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &URoomEnter_Widget::QuitUI );
 	if ( RoomEnter_Button )
@@ -21,6 +22,7 @@ void URoomEnter_Widget::QuitUI()
 
 void URoomEnter_Widget::RequestRoomEnter()
 {
+	/// 방 입장 요청 보내기
 	UServerManager* server = Cast<UServerManager>( GetGameInstance() );
 	if ( server == nullptr )
 	{

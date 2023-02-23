@@ -9,12 +9,14 @@
 
 void URoomInfo_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &URoomInfo_Widget::QuitUI );
 }
 
 void URoomInfo_Widget::SetRoomInfo(const FString& info)
 {
+	/// 방 정보 로그에 받아온 패킷 출력
 	if ( !RoomInfo_Scrollbox )
 		return;
 

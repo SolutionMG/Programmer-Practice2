@@ -19,9 +19,11 @@ class CHATTINGCLIENT_API UShowRoomList_Widget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	/// 나가기용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* QuitUserList_Button;
 
+	/// 방 목록 정보 출력용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UScrollBox* List_ScrollBox;
 

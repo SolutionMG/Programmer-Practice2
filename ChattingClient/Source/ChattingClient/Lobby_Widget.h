@@ -19,27 +19,35 @@ class CHATTINGCLIENT_API ULobby_Widget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	/// 퇴장용 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* LobbyExit_Button;
 
+	/// 유저 목록 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* UserList_Button;
 
+	/// 방 목록 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomList_Button;
 
+	/// 방 생성 Input 위젯 생성 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomCreate_Button;
 	
+	/// 귓속말 Input 위젯 생성 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* SecretMessage_Button;
 
+	/// 유저 정보 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* UserInfo_Button;
 
+	/// 방 정보 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomInfo_Button;
 
+	/// 방입장 Input 위젯 생성 요청 변수
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* RoomEnter_Button;
 
@@ -68,12 +76,15 @@ private:
 	UFUNCTION( )
 	void RequestSecretMessage( );
 
+	/// 방 입장 요청
 	UFUNCTION()
 	void RequestRoomEnter();
 
+	/// 방 정보 요청
 	UFUNCTION()
 	void RequestRoomInfo();
 
+	/// 유저 정보 요청
 	UFUNCTION()
 	void RequestUserInfo();
 };

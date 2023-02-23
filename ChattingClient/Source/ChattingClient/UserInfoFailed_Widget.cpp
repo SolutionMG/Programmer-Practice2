@@ -6,6 +6,7 @@
 
 void UUserInfoFailed_Widget::NativeConstruct()
 {
+	///버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &UUserInfoFailed_Widget::QuitUI );
 }

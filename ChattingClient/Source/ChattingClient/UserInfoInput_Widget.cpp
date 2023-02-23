@@ -10,6 +10,7 @@
 
 void UUserInfoInput_Widget::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &UUserInfoInput_Widget::QuitUI );
 	if ( Name_Textblock )
@@ -23,6 +24,7 @@ void UUserInfoInput_Widget::QuitUI()
 
 void UUserInfoInput_Widget::SendChatting( const FText& Text, ETextCommit::Type CommitMethod )
 {
+	/// 유저 정보 요청 보내기
 	if ( !Name_Textblock )
 		return;
 

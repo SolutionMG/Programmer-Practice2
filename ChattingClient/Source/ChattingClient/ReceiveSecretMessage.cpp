@@ -8,12 +8,14 @@
 
 void UReceiveSecretMessage::NativeConstruct()
 {
+	/// 버튼에 함수 바인딩
 	if ( QuitButton )
 		QuitButton->OnClicked.AddDynamic( this, &UReceiveSecretMessage::QuitUI );
 }
 
 void UReceiveSecretMessage::SetMessage( const FString& message )
 {
+	/// 텍스트블록에 귓속말 내용 출력
 	if ( !MessageTextBlock )
 		return;
 

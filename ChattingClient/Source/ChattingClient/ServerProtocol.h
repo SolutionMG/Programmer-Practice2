@@ -1,8 +1,7 @@
 ﻿#ifndef SERVER_PROTOCOL_H
 #define SERVER_PROTOCOL_H
 
-/// 값 초기화
-
+/// 초기화
 namespace InitializeServer
 {
 	constexpr unsigned short TOTALCORE = 8;
@@ -25,6 +24,7 @@ namespace InitializeRoom
 	constexpr unsigned short MAX_ROOMNAME = 32;
 }
 
+/// 메시지 로그 출력용
 namespace RenderMessageMacro
 {
 	///LOGIN
@@ -51,7 +51,7 @@ namespace RenderMessageMacro
 	constexpr char ROOM_ENTER_NONAME_MESSAGE[] = "** 방의 이름이 존재하지 않습니다. 올바른 방 이름을 입력해주세요.\n\r";
 	constexpr char USERINFO_MESSAGE_FAILED[] = "** <유저 정보 보기 실패>존재하지 않는 유저입니다.\n\r";
 }
-
+/// 명령어 검색 용
 namespace SearchMacro
 {
 	///LOGIN
